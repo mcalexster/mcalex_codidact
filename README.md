@@ -1,2 +1,2 @@
 # mcalex_codidact
-my work on codidact
+work on codidact
