@@ -1,0 +1,754 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+         Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="0.9.2" last-position="0,0" last-zoom="1" max-obj-count="20"
+	 default-schema="public" default-owner="postgres">
+<database name="new_database" is-template="false" allow-conns="true">
+</database>
+
+<schema name="public" layer="0" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<table name="Users" layer="0" collapse-mode="2" max-obj-count="8">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[This table will hold the global user records for an Codidact Instance. A user should only have one email to login with, that would be stored here. Does not include details such as password storage and hashing.]]></comment>
+	<position x="420" y="340"/>
+	<column name="ID" alias="Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="User creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="User last modifed date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="Email" alias="User email address" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="IsEmailVerified" alias="User email address verfied status" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="IsGlobalSuspended" alias="User global suspension status" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="GlobalSuspensionEndDate" alias="User global suspension end date/time" default-value="NOW() + 1">
+		<type name="timestamp" length="0"/>
+	</column>
+	<constraint name="UserEmail_uq" type="uq-constr" alias="User email unique constraint" table="public.&quot;Users&quot;">
+		<columns names="Email" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="Users_pk" type="pk-constr" table="public.&quot;Users&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="Template" layer="0" collapse-mode="2" max-obj-count="3">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="420" y="1680"/>
+	<column name="ID" alias="&lt;TABLE&gt; ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="&lt;TABLE&gt; creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="&lt;TABLE&gt; last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<constraint name="Template_pk" type="pk-constr" table="public.&quot;Template&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="Sites" layer="0" collapse-mode="2" max-obj-count="7">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Each of the individual sites inside of a Codidact installation]]></comment>
+	<position x="20" y="700"/>
+	<column name="ID" alias="Site ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="Site creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="Site last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="Name" alias="Site name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Tagline" alias="Site tagline" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="URL" alias="Site URL" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="Sites_pk" type="pk-constr" table="public.&quot;Sites&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="SiteName_uq" type="uq-constr" alias="Site name unique constraint" table="public.&quot;Sites&quot;">
+		<columns names="Name" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="SiteTagline_uq" type="uq-constr" table="public.&quot;Sites&quot;">
+		<columns names="Tagline" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="SiteURL_uq" type="uq-constr" alias="Site URL unique constraint" table="public.&quot;Sites&quot;">
+		<columns names="URL" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="TrustLevel" layer="0" collapse-mode="2" max-obj-count="6">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Name for each trust level and an explanation of each that a user should get when they get to that level.]]></comment>
+	<position x="440" y="60"/>
+	<column name="ID" alias="TrustLevel ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="TrustLevel creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="TrustLevel last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="Name" alias="TrustLevel name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Explanation" alias="TrustLevel explanation" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="TrustLevel_pk" type="pk-constr" table="public.&quot;TrustLevel&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="TrustLevelName_uq" type="uq-constr" alias="TrustLevel name unique constraint" table="public.&quot;TrustLevel&quot;">
+		<columns names="Name" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="TrustLevelExplanation_uq" type="uq-constr" alias="TrustLevel explanation unique constraint" table="public.&quot;TrustLevel&quot;">
+		<columns names="Explanation" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="UsersSites" layer="0" alias="Users &lt;-&gt; Sites join table" collapse-mode="2" max-obj-count="33">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[A user may want to join one site and not another, and having a join table between users and sites allows a user to be suspended or gain/lose privileges on a single site. I listed the privilege booleans in the order of lowest to highest, the privileges after IsModerator aren’t listed because we probably are going to take any of moderator’s lower privileges away without demodding them.]]></comment>
+	<position x="20" y="60"/>
+	<column name="ID" alias="UsersSites ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="UsersSites creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="UsersSites last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="SitesId" alias="Sites foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="UsersID" alias="UsersSites User foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="DisplayName" alias="UsersSites display name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Bio" alias="UsersSites biography">
+		<type name="text" length="0"/>
+	</column>
+	<column name="PersonalWebsite" alias="UsersSites personal website">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Github" alias="UsersSites Github username/url">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Twitter" alias="UsersSites Twitter username/url">
+		<type name="text" length="0"/>
+	</column>
+	<column name="IsSuspended" alias="UsersSites suspension status" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="SuspensionEndDate" alias="UsersSites suspension end date/time">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="TrustLevelID" alias="UsersSites TrustLevel foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CanAsk" alias="UsersSites can ask question" not-null="true" default-value="TRUE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="CanAnswer" alias="UsersSites can answer question" not-null="true" default-value="TRUE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="CanComment" alias="UsersSites can comment" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="CanSuggestEdits" alias="UsersSites can suggest edits to post" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="CanFlag" alias="UsersSites can flag post" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="CanUpvote" alias="UsersSites can upvote" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="CanDownvote" alias="UsersSites can downvote post" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="CanCloseVote" alias="UsersSites can vote to close post" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="CanEdit" alias="UsersSites can edit post" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="CanReview" alias="UsersSites can review post" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="CanProtectPosts" alias="UsersSites can protect posts" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="CanLockPosts" alias="UsersSites can lock posts" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="CanSoftDeletePosts" alias="UsersSites can delete posts" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="IsModerator" alias="UsersSites is moderator" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="IsDeleted" alias="UsersSites is deleted" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<constraint name="UsersSites_pk" type="pk-constr" alias="UsersSites primary key" table="public.&quot;UsersSites&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="UsersSites_Users_Sites_uq" type="uq-constr" alias="UsersSites Users &lt;-&gt; Sites unique column combination" table="public.&quot;UsersSites&quot;">
+		<columns names="UsersID,SitesId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="UsersSuspensions" layer="0" alias="Users &lt;-&gt; Suspensions join table" collapse-mode="2" max-obj-count="19">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[This table is for recording the specific privilege suspensions. The idea is that we will have an scheduled task running nightly that once the suspension is over will set the correct flag on the UsersSites table.]]></comment>
+	<position x="900" y="100"/>
+	<column name="ID" alias="UsersSuspensions ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="UsersSuspensions creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="UsersSuspensions last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="UsersID" alias="UsersSuspensions User foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="QuestionBanEndAt" alias="UsersSuspensions Question ban end date/time">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="AnswerBanEndAt" alias="UsersSuspensions Answer ban end date/time">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="CommentBanEndAt" alias="UsersSuspensions Comment ban end date/time">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="SuggestedEditBanEndAt" alias="UsersSuspensions Edit suggestion ban end date/time">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="FlagBanEndAt" alias="UsersSuspensions Flag ban end date/time">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="UpvoteBanEndAt" alias="UsersSuspensions Upvote ban end date/time">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="DownvoteBanEndAt" alias="UsersSuspensions Downvote ban end date/time">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="EditBanEndAt" alias="UsersSuspensions Edit ban end date/time">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="ReviewBanEndAt" alias="UsersSuspensions Review ban end date/time">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="ProtectBanEndAt" alias="UsersSuspensions Protect ban end date/time">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LockPostsBanEndAt" alias="UsersSuspensions Locking posts ban end date/time">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="SoftDeleteBanEndAt" alias="UsersSuspensions Soft deleting posts ban end date/time">
+		<type name="timestamp" length="0"/>
+	</column>
+	<constraint name="UsersSuspensions_pk" type="pk-constr" alias="UsersSuspensions primary key" table="public.&quot;UsersSuspensions&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="Posts" layer="0" collapse-mode="2" max-obj-count="15">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[I thought about splitting into a Answers table and and QuestionsTable but doing it in the same table lets comments have a PostsId instead of a QuestionsId and a AnswersId. Meta posts are denoted by the IsMeta column. Still unsure on community wiki/FAQ posts.]]></comment>
+	<position x="380" y="680"/>
+	<column name="ID" alias="Posts ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="Posts creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="Posts last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="SitesID" alias="Posts &lt;-&gt; Sites foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="Title" alias="Posts Title text" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Body" alias="Posts Body text" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Upvotes" alias="Posts Upvotes count" not-null="true" default-value="0">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="Downvotes" alias="Posts Downvotes count" not-null="true" default-value="0">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="Score" alias="Posts Score tally" not-null="true" default-value="Upvotes - Downvotes">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="IsAccepted" alias="Posts accepted status" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="ParentID" alias="Posts &lt;-&gt; parent Posts foreign key">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="IsMeta" alias="Posts meta status" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="IsDeleted" alias="Posts deleted status" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<constraint name="Posts_pk" type="pk-constr" alias="Posts primary key" table="public.&quot;Posts&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="Posts_SitesTitle_uc" type="uq-constr" alias="Posts - Sites &lt;-&gt; Title unique column combination" table="public.&quot;Posts&quot;">
+		<columns names="SitesID,Title" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="Comments" layer="0" collapse-mode="2" max-obj-count="12">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Table for the comments on posts, both questions and answers.]]></comment>
+	<position x="440" y="1220"/>
+	<column name="ID" alias="Comments ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="Comments creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="Comments last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="PostsID" alias="Comments Posts foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="ParentCommentsID" alias="Comments parent Comments foreign key">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="Body" alias="Comments body text" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Upvotes" alias="Comments upvotes tally" not-null="true" default-value="0">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="Downvotes" alias="Comments downvotes count" not-null="true" default-value="0">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="Score" alias="Posts score tally" not-null="true" default-value="Upvotes - Downvotes">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="IsDeleted" alias="Comments deleted status" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<constraint name="Comments_pk" type="pk-constr" alias="Comments primary key" table="public.&quot;Comments&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="CommentsVotes" layer="0" collapse-mode="2" max-obj-count="7">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="900" y="1120"/>
+	<column name="ID" alias="CommentsVotes ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="CommentsVotes creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="CommentsVotes last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="CommentsID" alias="CommentsVotes &lt;-&gt; Comments foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="UsersID" alias="CommentsVotes &lt;-&gt; Users foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="VoteTypesID" alias="CommentsVotes &lt;-&gt; Votes types foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="CommentsVotes_pk" type="pk-constr" alias="CommentsVotes primary key" table="public.&quot;CommentsVotes&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="CommentsVotes_CommentsUsers_uc" type="uq-constr" alias="CommentsVotes - Comments-Users unique column combination" table="public.&quot;CommentsVotes&quot;">
+		<columns names="CommentsID,UsersID" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="VoteTypes" layer="0" collapse-mode="2" max-obj-count="4">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Table for the vote types, upvote/downvote.]]></comment>
+	<position x="1000" y="800"/>
+	<column name="ID" alias="VoteTypes ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="VoteTypes creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="VoteTypes last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="Name" alias="VoteTypes Name text" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="VoteTypes_pk" type="pk-constr" alias="VoteTypes primary key" table="public.&quot;VoteTypes&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="VoteTypesName_uc" type="uq-constr" alias="VoteTypes Name unique column" table="public.&quot;VoteTypes&quot;">
+		<columns names="Name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="Tags" layer="0" collapse-mode="2" max-obj-count="8">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="20" y="980"/>
+	<column name="ID" alias="Tags ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="Tags creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="Tags last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="SitesID" alias="Tags &lt;-&gt; Sites foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="Name" alias="Tags name text" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Description" alias="Tags description text">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Usages" alias="Tags usages count" not-null="true" default-value="0">
+		<type name="smallint" length="0"/>
+	</column>
+	<constraint name="Template_pk_cp" type="pk-constr" table="public.&quot;Tags&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="Tags_SitesName_uc" type="uq-constr" alias="Tags - Sites Name unique column combination" table="public.&quot;Tags&quot;">
+		<columns names="SitesID,Name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="PostsTags" layer="0" collapse-mode="2" max-obj-count="6">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="80" y="1280"/>
+	<column name="ID" alias="PostsTags ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="PostsTags creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="PostsTags last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="PostsID" alias="PostsTags &lt;-&gt; Posts foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="TagsID" alias="PostsTags &lt;-&gt; Tags foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="PostsTags_pk" type="pk-constr" alias="PostsTags primary key" table="public.&quot;PostsTags&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="PostsTags_PostsTags_uc" type="uq-constr" alias="PostsTags - Posts Tags unique column combination" table="public.&quot;PostsTags&quot;">
+		<columns names="PostsID,TagsID" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="PostsVotes" layer="0" collapse-mode="2" max-obj-count="7">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[he reason for this table is so that votes by spammers/serial voters can be undone.]]></comment>
+	<position x="920" y="500"/>
+	<column name="ID" alias="PostsVotes ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="PostsVotes creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="PostsVotes last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="PostsID" alias="PostsVotes &lt;-&gt; Posts foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="VotesTypesID" alias="PostsVotes &lt;-&gt; VoteTypes foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="UsersID" alias="PostsVotes &lt;-&gt; Users foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="PostsVotes_pk" type="pk-constr" alias="PostsVotes primary key" table="public.&quot;PostsVotes&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="PostsVotes_PostsUsers_uc" type="uq-constr" alias="PostsVotes- Posts Votes unique column combination" table="public.&quot;PostsVotes&quot;">
+		<columns names="PostsID,UsersID" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<constraint name="UsersSites_SitesID_fk" type="fk-constr" alias="UsersSites SitesID foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Sites&quot;" table="public.&quot;UsersSites&quot;">
+	<columns names="SitesId" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="UsersSites_UsersID_fk" type="fk-constr" alias="UsersSites Users foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Users&quot;" table="public.&quot;UsersSites&quot;">
+	<columns names="UsersID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="UsersSites_TrustLevel_fk" type="fk-constr" alias="UsersSites TrustLevel foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;TrustLevel&quot;" table="public.&quot;UsersSites&quot;">
+	<columns names="TrustLevelID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="UsersSuspensionsUser_fk" type="fk-constr" alias="UsersSuspensions - Users foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Users&quot;" table="public.&quot;UsersSuspensions&quot;">
+	<columns names="UsersID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="PostsSites_fk" type="fk-constr" alias="Posts Sites foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Sites&quot;" table="public.&quot;Posts&quot;">
+	<columns names="SitesID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="PostsParent_fk" type="fk-constr" alias="Posts &lt;-&gt; parent Posts foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Posts&quot;" table="public.&quot;Posts&quot;">
+	<columns names="ParentID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="CommentsPosts_fk" type="fk-constr" alias="Comments Posts foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Posts&quot;" table="public.&quot;Comments&quot;">
+	<columns names="PostsID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="CommentsParentComments_fk" type="fk-constr" alias="Comments parent Comments foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Comments&quot;" table="public.&quot;Comments&quot;">
+	<columns names="ParentCommentsID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="CommentsVotesComments_fk" type="fk-constr" alias="CommentsVotes &lt;-&gt; Comments foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Comments&quot;" table="public.&quot;CommentsVotes&quot;">
+	<columns names="CommentsID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="CommentsVotesUsers_fk" type="fk-constr" alias="CommentsVotes &lt;-&gt; Users foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Users&quot;" table="public.&quot;CommentsVotes&quot;">
+	<columns names="UsersID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="CommentsVotes_VoteTypes_fk" type="fk-constr" alias="CommentsVotes &lt;-&gt; VoteTypes foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;VoteTypes&quot;" table="public.&quot;CommentsVotes&quot;">
+	<columns names="VoteTypesID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="TagsSites_fk" type="fk-constr" alias="Tags &lt;-&gt; Sites foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Sites&quot;" table="public.&quot;Tags&quot;">
+	<columns names="SitesID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="PostsTags_Posts_fk" type="fk-constr" alias="PostsTags &lt;-&gt; Posts foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Posts&quot;" table="public.&quot;PostsTags&quot;">
+	<columns names="PostsID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="PostsTags_Tags_fk" type="fk-constr" alias="PostsTags &lt;-&gt;Tags foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Tags&quot;" table="public.&quot;PostsTags&quot;">
+	<columns names="TagsID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="PostsVotes_Posts_fk" type="fk-constr" alias="PostsVotes &lt;-&gt; Votes foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Posts&quot;" table="public.&quot;PostsVotes&quot;">
+	<columns names="PostsID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="PostsVotes_VoteTypes_fk" type="fk-constr" alias="PostsVotes &lt;-&gt; VoteTypes foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;VoteTypes&quot;" table="public.&quot;PostsVotes&quot;">
+	<columns names="VotesTypesID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="PostsVotes_Users_fk" type="fk-constr" alias="PostsVotes &lt;-&gt; Users foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Users&quot;" table="public.&quot;PostsVotes&quot;">
+	<columns names="UsersID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<relationship name="rel_UsersSites_Sites" type="relfk" layer="0"
+	 src-table="public.&quot;UsersSites&quot;"
+	 dst-table="public.&quot;Sites&quot;" reference-fk="UsersSites_SitesID_fk"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="9.36056" y="4.28229"/>
+	</label>
+</relationship>
+
+<relationship name="rel_UsersSites_Users" type="relfk" layer="0"
+	 src-table="public.&quot;UsersSites&quot;"
+	 dst-table="public.&quot;Users&quot;" reference-fk="UsersSites_UsersID_fk"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="-5.48101" y="-7.58263"/>
+	</label>
+</relationship>
+
+<relationship name="rel_UsersSites_TrustLevel" type="relfk" layer="0"
+	 src-table="public.&quot;UsersSites&quot;"
+	 dst-table="public.&quot;TrustLevel&quot;" reference-fk="UsersSites_TrustLevel_fk"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="-9.72286" y="7.30421"/>
+	</label>
+</relationship>
+
+<relationship name="&quot;rel_UsersSuspensions_Users&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;UsersSuspensions&quot;"
+	 dst-table="public.&quot;Users&quot;" reference-fk="UsersSuspensionsUser_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_Posts_Posts" type="relfk" layer="0"
+	 src-table="public.&quot;Posts&quot;"
+	 dst-table="public.&quot;Posts&quot;" reference-fk="PostsParent_fk"
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="664.618" y="789.42"/>
+	<position x="664.618" y="657"/>
+	<position x="554.412" y="657"/>
+	</line>
+	<label ref-type="name-label">
+		<position x="4.85628" y="-4.15"/>
+	</label>
+</relationship>
+
+<relationship name="&quot;rel_Posts_Sites&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;Posts&quot;"
+	 dst-table="public.&quot;Sites&quot;" reference-fk="PostsSites_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_Comments_Posts&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;Comments&quot;"
+	 dst-table="public.&quot;Posts&quot;" reference-fk="CommentsPosts_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_Comments_Comments" type="relfk" layer="0"
+	 src-table="public.&quot;Comments&quot;"
+	 dst-table="public.&quot;Comments&quot;" reference-fk="CommentsParentComments_fk"
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="798.009" y="1307.29"/>
+	<position x="798.009" y="1197"/>
+	<position x="663.339" y="1197"/>
+	</line>
+</relationship>
+
+<relationship name="&quot;rel_CommentsVotes_Comments&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;CommentsVotes&quot;"
+	 dst-table="public.&quot;Comments&quot;" reference-fk="CommentsVotesComments_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_CommentsVotes_Users&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;CommentsVotes&quot;"
+	 dst-table="public.&quot;Users&quot;" reference-fk="CommentsVotesUsers_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_CommentsVotes_VoteTypes&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;CommentsVotes&quot;"
+	 dst-table="public.&quot;VoteTypes&quot;" reference-fk="CommentsVotes_VoteTypes_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_Tags_Sites&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;Tags&quot;"
+	 dst-table="public.&quot;Sites&quot;" reference-fk="TagsSites_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_PostsTags_Posts&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;PostsTags&quot;"
+	 dst-table="public.&quot;Posts&quot;" reference-fk="PostsTags_Posts_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_PostsTags_Tags&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;PostsTags&quot;"
+	 dst-table="public.&quot;Tags&quot;" reference-fk="PostsTags_Tags_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_PostsVotes_Posts&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;PostsVotes&quot;"
+	 dst-table="public.&quot;Posts&quot;" reference-fk="PostsVotes_Posts_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_PostsVotes_VoteTypes&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;PostsVotes&quot;"
+	 dst-table="public.&quot;VoteTypes&quot;" reference-fk="PostsVotes_VoteTypes_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_PostsVotes_Users&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;PostsVotes&quot;"
+	 dst-table="public.&quot;Users&quot;" reference-fk="PostsVotes_Users_fk"
+	 src-required="false" dst-required="false"/>
+
+</dbmodel>
