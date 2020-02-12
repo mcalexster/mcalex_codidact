@@ -1,0 +1,16 @@
+Check difference between bool and boolean
+
+Users table - GlobalSuspensionEndDate column
+  should probably be a separate table (UserID, SuspensionStart, SuspensionEnd) to keep a history of SuspensionStart
+
+UsersSuspensions table - all those *BanEndDates
+  should probably have a SuspensionType table with a foreign key to this table 
+
+Posts table - Where to put attachments: files, pics (fiddle embeds?)
+
+Posts table - Score column
+  is this a calculated field (eg: (10 * Upvotes) - (5 * Downvotes))
+
+NOT NULL inconsistency.  Spec should include 'NOT NULL' for all non-nullable columns
+Need cascade rules for ON DELETE, ON UPDATE foreign keys
+Table Comments for: CommentsVotes, Tags, PostsTags
