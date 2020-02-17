@@ -1,3 +1,5 @@
+Schema Proposal
+
 Check difference between bool and boolean
 
 Users table - GlobalSuspensionEndDate column
@@ -11,6 +13,47 @@ Posts table - Where to put attachments: files, pics (fiddle embeds?)
 Posts table - Score column
   is this a calculated field (eg: (10 * Upvotes) - (5 * Downvotes))
 
+UsersSites references but doesn't have a UsersID
+
 NOT NULL inconsistency.  Spec should include 'NOT NULL' for all non-nullable columns
 Need cascade rules for ON DELETE, ON UPDATE foreign keys
 Table Comments for: CommentsVotes, Tags, PostsTags
+
+I have chosen BigInt with the type of IDENTITY instead of BigSerial for primary keys.  I assume we are on postgresql >= 10.0?
+
+
+Schema Proposal Round 2
+
+Change Log:
+Users table took on a bunch of 'UsersSites' fields
+UsersSites table renamed to UsersCommunities
+Sites table renamed to Communities
+
+
+Are Communites' fiels not null (helptext, faq, isBeta)?
+Topic Posts debate: manassehkatz is right: all those things are Posts
+cwellsx is right Topics and Posts are different.  Topics contain post(s?)
+
+All those Is's in Posts table: PostsTypeID linked to different tables with specific bits is the best pattern in my understanding
+  Possibly (if they're 1:1, with the PostID as PK)
+Same as what (check?) said about all the privileges in UsersCommunities in forum comments, and all the bans in UsersSuspensions
+
+Also not sure about the ParentID column in tables.  I'd prefer a separate PostFamily table with ParentPostID, ChildPostID, or even PostId, RelatedPostID and RelationTypeID for children (answers), siblings (related) and possibly (making it up as I go along now) grandparents for old dupes
+
+Users<del>Sites</del>Communities references but doesn't have a UsersID
+
+
+Schema Proposal Round 3
+
+Communities table - change from 'IsBeta bool' to 'Status enum'.  Is there a StatusType table?  Where does te enum come from?
+
+TrustLevelCommunity table has no comment
+TrustLevelCommunity table has no TrustLevel FK (I added one)
+
+MemberCommunityPrivilege relations - FKs to Member, Community: why not FK to MemberCommunity?
+
+Tag table - SynonymTagID - does this assume only one synonym for each tag, not a possible bunch or have i understood tags incorrectly
+
+TrustLevel table - gave table comment to TrustLevelCommunity table
+
+I seem to have a 'template_pk_cp' primary key identifier somewhere I have to search & replace

@@ -1,0 +1,1022 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+         Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="0.9.2" last-position="0,0" last-zoom="1" max-obj-count="28"
+	 default-schema="public" default-owner="postgres">
+<database name="new_database" is-template="false" allow-conns="true">
+</database>
+
+<schema name="public" layer="0" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<table name="Member" layer="0" collapse-mode="2" max-obj-count="21">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[This table will hold the global member records for a Codidact Instance. A member should only have one email to login with, that would be stored here. Does not include details such as password storage and hashing.]]></comment>
+	<position x="460" y="640"/>
+	<column name="ID" alias="Member ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="Member creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="Member last modifed date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="DisplayName" alias="Member display name text" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Bio" alias="Member biography text">
+		<type name="text" length="0"/>
+	</column>
+	<column name="PersonalWebsite" alias="Member personal website text">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Github" alias="Member github link text">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Twitter" alias="Member twitter link text">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Email" alias="Member email address text" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="GravatarHash" alias="Member gravatar hash text">
+		<type name="text" length="0"/>
+		<comment><![CDATA[is this not null?]]></comment>
+	</column>
+	<column name="Location" alias="Member location text">
+		<type name="text" length="0"/>
+	</column>
+	<column name="IsFromStackExchange" alias="Member ex stack exchange status" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="StackExchangeID" alias="Member Stack Exchange account ID">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="StackExchangeValidatedAt" alias="Member Stack Exchange account validation date/time">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="StackExchangeLastImportedAt" alias="Member Stack Exchange last data import date/time" not-null="true">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="IsEmailVerified" alias="Member email address verfied status" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="IsSuspended" alias="Member suspension status" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="SuspensionEndAt" alias="Member suspension end date/time">
+		<type name="timestamp" length="0"/>
+	</column>
+	<constraint name="Member_pk" type="pk-constr" alias="Member primary key" table="public.&quot;Member&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="MemberEmail_uq" type="uq-constr" alias="Member email unique column" table="public.&quot;Member&quot;">
+		<columns names="Email" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="Template" layer="0" collapse-mode="2" max-obj-count="3">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="440" y="2160"/>
+	<column name="ID" alias="&lt;TABLE&gt; ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="&lt;TABLE&gt; creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="&lt;TABLE&gt; last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<constraint name="Template_pk" type="pk-constr" table="public.&quot;Template&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="Community" layer="0" collapse-mode="2" max-obj-count="10">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Table for each of the individual communities inside of a Codidact installation]]></comment>
+	<position x="40" y="680"/>
+	<column name="ID" alias="Community ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="Community creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="Community last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="Name" alias="Community name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Tagline" alias="Community tagline" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="URL" alias="Community URL" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="HelpText" alias="Community Help text">
+		<type name="text" length="0"/>
+	</column>
+	<column name="FAQ" alias="Community frequently asked questions text">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Status" alias="Community site status" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="Community_pk" type="pk-constr" alias="Community primary key" table="public.&quot;Community&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="CommunityName_uq" type="uq-constr" alias="Community name unique column" table="public.&quot;Community&quot;">
+		<columns names="Name" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="CommunityTagline_uq" type="uq-constr" alias="Community tagline unique column" table="public.&quot;Community&quot;">
+		<columns names="Tagline" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="CommunityURL_uq" type="uq-constr" alias="Community URL unique column" table="public.&quot;Community&quot;">
+		<columns names="URL" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="TrustLevel" layer="0" collapse-mode="2" max-obj-count="6">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Name for each trust level and an explanation of each that a user should get when they get to that level. ]]></comment>
+	<position x="460" y="20"/>
+	<column name="ID" alias="TrustLevel ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="TrustLevel creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="TrustLevel last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="Name" alias="TrustLevel name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Explanation" alias="TrustLevel explanation" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="TrustLevel_pk" type="pk-constr" table="public.&quot;TrustLevel&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="TrustLevelName_uq" type="uq-constr" alias="TrustLevel name unique constraint" table="public.&quot;TrustLevel&quot;">
+		<columns names="Name" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="TrustLevelExplanation_uq" type="uq-constr" alias="TrustLevel explanation unique constraint" table="public.&quot;TrustLevel&quot;">
+		<columns names="Explanation" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="MemberCommunity" layer="0" alias="Member &lt;-&gt; Community join table" collapse-mode="2" max-obj-count="27">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[A user may want to join one community and not another, and having a join table between users and communities allows a user to be suspended or gain/lose privileges on a single site. I listed the privilege booleans in the order of lowest to highest, the privileges after IsModerator aren’t listed because we probably are going to take any of moderator’s lower privileges away without demodding them.]]></comment>
+	<position x="0" y="20"/>
+	<column name="ID" alias="MemberCommunity - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="MemberCommunity creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="MemberCommunity last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="CommunityId" alias="MemberCommunity &lt;-&gt; Community foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="MemberID" alias="MemberCommunity &lt;-&gt; Member foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="DisplayName" alias="MemberCommunity display name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Bio" alias="MemberCommunity biography">
+		<type name="text" length="0"/>
+	</column>
+	<column name="PersonalWebsite" alias="MemberCommunity personal website">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Github" alias="MemberCommunity Github username/account/url">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Twitter" alias="MemberCommunity Twitter username/account/url">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Email" alias="MemberCommunity member email address text">
+		<type name="text" length="0"/>
+	</column>
+	<column name="GravatarHash" alias="MemberCommunity gravatar hash text">
+		<type name="text" length="0"/>
+		<comment><![CDATA[Is this not null?]]></comment>
+	</column>
+	<column name="Location" alias="MemberCommunity member location text">
+		<type name="text" length="0"/>
+	</column>
+	<column name="IsFromStackExchange" alias="MemberCommunity from Stack Exchange status" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="StackExchangeID" alias="MemberCommunity Stack Exchange account ID">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="IsSameAsInstance" alias="MemberCommunity same as instance status" default-value="NULL">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="StackExchangeValidatedAt" alias="MemberCommunity Stack Exchange account validation date/time">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="StackExchangeLastImportedAt" alias="MemberCommunity Stack Exchange latest data import date/time">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="IsSuspended" alias="MemberCommunity suspension status" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="SuspensionEndDate" alias="MemberCommunity suspension end date/time">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="TrustLevelCommunityID" alias="MemberCommunity &lt;-&gt; TrustLevelCommunity foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="IsModerator" alias="MemberCommunity is moderator" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="IsDeleted" alias="MemberCommunity is deleted" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<constraint name="MemberCommunity_pk" type="pk-constr" alias="MemberCommunity primary key" table="public.&quot;MemberCommunity&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="MemberCommunity_MemberCommunity_uq" type="uq-constr" alias="MemberCommunity - Member, Community unique column combination" table="public.&quot;MemberCommunity&quot;">
+		<columns names="MemberID,CommunityId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="Post" layer="0" collapse-mode="2" max-obj-count="21">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[I thought about splitting into a Answers table and and QuestionsTable but doing it in the same table lets comments have a PostsId instead of a QuestionsId and a AnswersId. Meta posts are denoted by the IsMeta column. Type of post is determined by the PostTypeId]]></comment>
+	<position x="460" y="1060"/>
+	<column name="ID" alias="Post ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="Post creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="Post last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="MemberID" alias="Post &lt;-&gt; Member foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CommunityID" alias="Post &lt;-&gt; Community foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="Title" alias="Post title text" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Body" alias="Post body text" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Upvotes" alias="Post upvotes count" not-null="true" default-value="0">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="Downvotes" alias="Post downvotes count" not-null="true" default-value="0">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="NetVotes" alias="Post net upvote/downvote count" default-value="Posts.Upvotes - Posts.Downvotes">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="Score" alias="Post score tally" not-null="true">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="PostTypeID" alias="Post &lt;-&gt; Type foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="IsAccepted" alias="Post accepted status" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="IsClosed" alias="Post closed status" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="IsProtected" alias="Post protected status" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="ParentPostID" alias="Post &lt;-&gt; parent Post foreign key">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="IsMeta" alias="Post meta status" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="IsDeleted" alias="Post deleted status" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<constraint name="Post_pk" type="pk-constr" alias="Post primary key" table="public.&quot;Post&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="Post_CommunityTitle_uc" type="uq-constr" alias="Post - Community, Title unique column combination" table="public.&quot;Post&quot;">
+		<columns names="CommunityID,Title" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="Comment" layer="0" collapse-mode="2" max-obj-count="15">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Table for the comments on posts, both questions and answers.]]></comment>
+	<position x="480" y="1580"/>
+	<column name="ID" alias="Comment ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="Comment creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="Comment last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="MemberID" alias="Comment &lt;-&gt; Member foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="PostID" alias="Comment &lt;-&gt; Post foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="ParentCommentID" alias="Comment &lt;-&gt; parent Comment foreign key">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="Body" alias="Comment body text" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Upvotes" alias="Comment upvotes tally" not-null="true" default-value="0">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="Downvotes" alias="Comment downvotes count" not-null="true" default-value="0">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="NetVotes" alias="Comment net upvotes/downvotes count" default-value="Comment.Upvotes - Comment.Downvotes">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="Score" alias="Comment score tally" not-null="true" default-value="0">
+		<type name="decimal" length="0"/>
+	</column>
+	<column name="IsDeleted" alias="Comment deleted status" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="DeletedAt" alias="Comment deleted date/time">
+		<type name="timestamp" length="0"/>
+	</column>
+	<constraint name="Comment_pk" type="pk-constr" alias="Comment primary key" table="public.&quot;Comment&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="VoteType" layer="0" collapse-mode="2" max-obj-count="4">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Table for the vote types, upvote/downvote.]]></comment>
+	<position x="920" y="900"/>
+	<column name="ID" alias="VoteType ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="VoteType creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="VoteType last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="Name" alias="VoteType name text" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="VoteType_pk" type="pk-constr" alias="VoteType primary key" table="public.&quot;VoteType&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="VoteType_Name_uc" type="uq-constr" alias="VoteType - Name unique column" table="public.&quot;VoteType&quot;">
+		<columns names="Name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="Tag" layer="0" collapse-mode="2" max-obj-count="12">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Table for all of the tags]]></comment>
+	<position x="20" y="1080"/>
+	<column name="ID" alias="Tag ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="Tag creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="Tag last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="CommunityID" alias="Tag &lt;-&gt; Community foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="Name" alias="Tag name text" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Description" alias="Tag description text">
+		<type name="text" length="0"/>
+	</column>
+	<column name="TagWiki" alias="Tag  wiki text">
+		<type name="text" length="0"/>
+	</column>
+	<column name="IsActive" alias="Tag active status" not-null="true" default-value="TRUE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="SynonymTagID" alias="Tag &lt;-&gt; synonymous Tag foreign key">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="Usages" alias="Tag usages count" not-null="true" default-value="0">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="Tag_pk" type="pk-constr" table="public.&quot;Tag&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="Tag_CommunityName_uc" type="uq-constr" alias="Tag - Community, Name unique column combination" table="public.&quot;Tag&quot;">
+		<columns names="CommunityID,Name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="PostTag" layer="0" alias="Post &lt;-&gt; Tag join table" collapse-mode="2" max-obj-count="6">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="20" y="1380"/>
+	<column name="ID" alias="PostTag ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="PostTag creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="PostTag last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="PostID" alias="PostTag &lt;-&gt; Post foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="TagID" alias="PostTag &lt;-&gt; Tag foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="PostTag_pk" type="pk-constr" alias="PostTag primary key" table="public.&quot;PostTag&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="PostTag_PostTag_uc" type="uq-constr" alias="PostTag - Post, Tag unique column combination" table="public.&quot;PostTag&quot;">
+		<columns names="PostID,TagID" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="PostVote" layer="0" collapse-mode="2" max-obj-count="7">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[he reason for this table is so that votes by spammers/serial voters can be undone.]]></comment>
+	<position x="900" y="620"/>
+	<column name="ID" alias="PostVote ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="PostVote creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="PostVote last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="PostID" alias="PostVote &lt;-&gt; Post foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="VoteTypeID" alias="PostVote &lt;-&gt; VoteType foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="MemberID" alias="PostVote &lt;-&gt; Member foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="PostVote_pk" type="pk-constr" alias="PostVote primary key" table="public.&quot;PostVote&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="PostVote_PostMember_uc" type="uq-constr" alias="PostVote - Post, Member unique column combination" table="public.&quot;PostVote&quot;">
+		<columns names="PostID,MemberID" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="TrustLevelCommunity" layer="0" alias="TrustLevel &lt;-&gt; Community join table" collapse-mode="2" max-obj-count="9">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[This needs to be specific to a community/site for when we get different language sites and it needs to be localized.]]></comment>
+	<position x="440" y="240"/>
+	<column name="ID" alias="TrustLevelCommunity ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="TrustLevelCommunity creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="TrustLevelCommunity last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="CommunityID" alias="TrustLevelCommunity &lt;-&gt; Community foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="IsSameAsInstance" alias="TrustLevelCommunity same as instance status" not-null="true" default-value="TRUE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="Name" alias="TrustLevelCommunity name text">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Explanation" alias="TrustLevelCommunity explanation text">
+		<type name="text" length="0"/>
+	</column>
+	<column name="TrustLevelID" alias="TrustLevelCommunity &lt;-&gt; TrustLevel foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="TrustLevelCommunity_pk" type="pk-constr" alias="TrustLevelCommunity primary key" table="public.&quot;TrustLevelCommunity&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="TrustLevelCommunity_Explanation_uc" type="uq-constr" alias="TrustLevelCommunity - Explanation unique column" table="public.&quot;TrustLevelCommunity&quot;">
+		<columns names="Explanation" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="TrustLevelCommunity_Name_uc" type="uq-constr" alias="TrustLevelCommunity - Name unique column" table="public.&quot;TrustLevelCommunity&quot;">
+		<columns names="Name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="Privilege" layer="0" collapse-mode="2" max-obj-count="6">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Table for privileges]]></comment>
+	<position x="980" y="20"/>
+	<column name="ID" alias="Privilege ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="Privilege creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="Privilege last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="Name" alias="Privilege name text" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Description" alias="Privilege description text">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="Privilege_pk" type="pk-constr" table="public.&quot;Privilege&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="MemberCommunityPrivilege" layer="0" alias="MemberCommunity &lt;-&gt; Privlege join table" collapse-mode="2" max-obj-count="10">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="840" y="220"/>
+	<column name="ID" alias="MemberCommunityPrivilege ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="MemberCommunityPrivilege creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="MemberCommunityPrivilege last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="CommunityID" alias="MemberCommunityPrivilege &lt;-&gt; Community foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="MemberID" alias="MemberCommunityPrivilege &lt;-&gt; Member foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="PrivilegeID" alias="MemberCommunityPrivilege &lt;-&gt; Prilige foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="IsSuspended" alias="MemberCommunityPrivilege suspended status" not-null="true" default-value="FALSE">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="PrivilegeSuspensionStartAt" alias="MemberCommunityPrivilege suspension start date/time">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="PrivilegeSuspensionEndAt" alias="MemberCommunityPrivilege suspension end date/time">
+		<type name="timestamp" length="0"/>
+	</column>
+	<constraint name="MemberCommunityPrivilege_pk" type="pk-constr" alias="MemberCommunityPrivilege primary key" table="public.&quot;MemberCommunityPrivilege&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="MemberCommunityPrivilege_uc" type="uq-constr" alias="Member, Community, Privilege unique column combination" table="public.&quot;MemberCommunityPrivilege&quot;">
+		<columns names="MemberID,CommunityID,PrivilegeID" ref-type="src-columns"/>
+		<comment><![CDATA[Name, alias don't follow normal naming conventions due to 63 char limit.]]></comment>
+	</constraint>
+</table>
+
+<table name="PostType" layer="0" collapse-mode="2" max-obj-count="6">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="180" y="1680"/>
+	<column name="ID" alias="PostType ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="PostType creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="PostType last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="Name" alias="PostType name text" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Description" alias="PostType description text">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="PostType_pk" type="pk-constr" table="public.&quot;PostType&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="CommentVote" layer="0" alias="Comment &lt;-&gt; Vote join table" collapse-mode="2" max-obj-count="7">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="880" y="1160"/>
+	<column name="ID" alias="CommentVote ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="CreatedAt" alias="CommentVote creation date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="LastModifiedAt" alias="CommentVote last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="CommentID" alias="CommentVote &lt;-&gt; Comment foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="MemberID" alias="CommentVote &lt;-&gt; Member foeign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="VoteTypeID" alias="CommentVote &lt;-&gt; VoteType foreign key" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="CommentVote_pk" type="pk-constr" table="public.&quot;CommentVote&quot;">
+		<columns names="ID" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="CommentVote_CommentMember_uc" type="uq-constr" alias="CommentVote - Comment, Member unique column combination" table="public.&quot;CommentVote&quot;">
+		<columns names="CommentID,MemberID" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="TableList" layer="0" collapse-mode="2" max-obj-count="19">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="100" y="1960"/>
+	<column name="TABLE_LIST" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="Member">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="Community">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="TrustLevel">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="TrustLevelCommunity">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="MemberCommunity">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="Privilege">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="MemberCommunityPrivilege">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="PostType">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="Post">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="Comment">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="CommentVote">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="Tag">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="PostTag">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="VoteType">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="PostVote">
+		<type name="smallint" length="0"/>
+	</column>
+	<constraint name="TABLE_LIST_PK" type="pk-constr" table="public.&quot;TableList&quot;">
+		<columns names="TABLE_LIST" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<constraint name="MemberCommunity_Community_fk" type="fk-constr" alias="MemberCommunity &lt;-&gt; Community foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Community&quot;" table="public.&quot;MemberCommunity&quot;">
+	<columns names="CommunityId" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="MemberCommunity_UsersID_fk" type="fk-constr" alias="MemberCommunity &lt;-&gt; Member foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Member&quot;" table="public.&quot;MemberCommunity&quot;">
+	<columns names="MemberID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="MemberCommunity_TrustLevelCommunity_fk" type="fk-constr" alias="MemberCommunity TrustLevelCommunity foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;TrustLevelCommunity&quot;" table="public.&quot;MemberCommunity&quot;">
+	<columns names="TrustLevelCommunityID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="PostCommunity_fk" type="fk-constr" alias="Post &lt;-&gt; Community foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Community&quot;" table="public.&quot;Post&quot;">
+	<columns names="CommunityID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="PostParentPost_fk" type="fk-constr" alias="Post &lt;-&gt; parent Post foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Post&quot;" table="public.&quot;Post&quot;">
+	<columns names="ParentPostID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="Post_Member_fk" type="fk-constr" alias="Post &lt;-&gt; Member foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Member&quot;" table="public.&quot;Post&quot;">
+	<columns names="MemberID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="Post_PostType_fk" type="fk-constr" alias="Post &lt;-&gt; PostType foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;PostType&quot;" table="public.&quot;Post&quot;">
+	<columns names="PostTypeID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="Comment_Post_fk" type="fk-constr" alias="Comment &lt;-&gt; Post foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Post&quot;" table="public.&quot;Comment&quot;">
+	<columns names="PostID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="Comment_ParentComment_fk" type="fk-constr" alias="Comment &lt;-&gt; parent Comment foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Comment&quot;" table="public.&quot;Comment&quot;">
+	<columns names="ParentCommentID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="Comment_Member_fk" type="fk-constr" alias="Comment &lt;-&gt; Member foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Member&quot;" table="public.&quot;Comment&quot;">
+	<columns names="MemberID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="Tag_Community_fk" type="fk-constr" alias="Tag &lt;-&gt; Community foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Community&quot;" table="public.&quot;Tag&quot;">
+	<columns names="CommunityID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="PostTag_Post_fk" type="fk-constr" alias="PostTag &lt;-&gt; Post foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Post&quot;" table="public.&quot;PostTag&quot;">
+	<columns names="PostID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="PostTag_Tag_fk" type="fk-constr" alias="PostTag &lt;-&gt;Tag foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Tag&quot;" table="public.&quot;PostTag&quot;">
+	<columns names="TagID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="PostVote_Post_fk" type="fk-constr" alias="PostVote &lt;-&gt; Post foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Post&quot;" table="public.&quot;PostVote&quot;">
+	<columns names="PostID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="PostVote_VoteType_fk" type="fk-constr" alias="PostVote &lt;-&gt; VoteType foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;VoteType&quot;" table="public.&quot;PostVote&quot;">
+	<columns names="VoteTypeID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="PostVote_Member_fk" type="fk-constr" alias="PostVote &lt;-&gt; Member foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Member&quot;" table="public.&quot;PostVote&quot;">
+	<columns names="MemberID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="TrustLevelCommunity_Community_fk" type="fk-constr" alias="TrustLevelCommunity &lt;-&gt; Community foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Community&quot;" table="public.&quot;TrustLevelCommunity&quot;">
+	<columns names="CommunityID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="TrustLevelCommunity_TrustLevel_fk" type="fk-constr" alias="TrustLevelCommunity &lt;-&gt; TrustLevel foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;TrustLevel&quot;" table="public.&quot;TrustLevelCommunity&quot;">
+	<columns names="TrustLevelID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="MemberCommunityPrivilege_Community_fk" type="fk-constr" alias="MemberCommunityPrivilege &lt;-&gt; Community foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Community&quot;" table="public.&quot;MemberCommunityPrivilege&quot;">
+	<columns names="CommunityID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="MemberCommunityPrivilege_Member_fk" type="fk-constr" alias="MemberCommunityPrivilege  &lt;-&gt; Member foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Member&quot;" table="public.&quot;MemberCommunityPrivilege&quot;">
+	<columns names="MemberID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="MemberCommunityPrivilege_Privlege_fk" type="fk-constr" alias="MemberCommunityPrivilege &lt;-&gt; Privilege foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Privilege&quot;" table="public.&quot;MemberCommunityPrivilege&quot;">
+	<columns names="PrivilegeID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="CommentVote_Comment_fk" type="fk-constr" alias="CommentVote &lt;-&gt; Comment foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Comment&quot;" table="public.&quot;CommentVote&quot;">
+	<columns names="CommentID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="CommentVote_Member_fk" type="fk-constr" alias="CommentVote &lt;-&gt; Member foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Member&quot;" table="public.&quot;CommentVote&quot;">
+	<columns names="MemberID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="CommentVote_VoteType_fk" type="fk-constr" alias="CommentVote &lt;-&gt; VoteType foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;VoteType&quot;" table="public.&quot;CommentVote&quot;">
+	<columns names="VoteTypeID" ref-type="src-columns"/>
+	<columns names="ID" ref-type="dst-columns"/>
+</constraint>
+
+<relationship name="rel_UsersSites_Sites" type="relfk" layer="0"
+	 src-table="public.&quot;MemberCommunity&quot;"
+	 dst-table="public.&quot;Community&quot;" reference-fk="MemberCommunity_Community_fk"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="9.36056" y="4.28229"/>
+	</label>
+</relationship>
+
+<relationship name="rel_UsersSites_Users" type="relfk" layer="0"
+	 src-table="public.&quot;MemberCommunity&quot;"
+	 dst-table="public.&quot;Member&quot;" reference-fk="MemberCommunity_UsersID_fk"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="-5.48101" y="-7.58263"/>
+	</label>
+</relationship>
+
+<relationship name="rel_Posts_Posts" type="relfk" layer="0"
+	 src-table="public.&quot;Post&quot;"
+	 dst-table="public.&quot;Post&quot;" reference-fk="PostParentPost_fk"
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="778.493" y="1208.15"/>
+	<position x="778.493" y="1037"/>
+	<position x="656.995" y="1037"/>
+	</line>
+	<label ref-type="name-label">
+		<position x="4.85628" y="-4.15"/>
+	</label>
+</relationship>
+
+<relationship name="&quot;rel_Posts_Sites&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;Post&quot;"
+	 dst-table="public.&quot;Community&quot;" reference-fk="PostCommunity_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_Comments_Posts&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;Comment&quot;"
+	 dst-table="public.&quot;Post&quot;" reference-fk="Comment_Post_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_Comments_Comments" type="relfk" layer="0"
+	 src-table="public.&quot;Comment&quot;"
+	 dst-table="public.&quot;Comment&quot;" reference-fk="Comment_ParentComment_fk"
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="831.509" y="1689.42"/>
+	<position x="831.509" y="1557"/>
+	<position x="699.006" y="1557"/>
+	</line>
+</relationship>
+
+<relationship name="&quot;rel_Tags_Sites&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;Tag&quot;"
+	 dst-table="public.&quot;Community&quot;" reference-fk="Tag_Community_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_PostsTags_Posts&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;PostTag&quot;"
+	 dst-table="public.&quot;Post&quot;" reference-fk="PostTag_Post_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_PostsTags_Tags&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;PostTag&quot;"
+	 dst-table="public.&quot;Tag&quot;" reference-fk="PostTag_Tag_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_PostsVotes_Posts&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;PostVote&quot;"
+	 dst-table="public.&quot;Post&quot;" reference-fk="PostVote_Post_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_PostsVotes_VoteTypes&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;PostVote&quot;"
+	 dst-table="public.&quot;VoteType&quot;" reference-fk="PostVote_VoteType_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_PostsVotes_Users&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;PostVote&quot;"
+	 dst-table="public.&quot;Member&quot;" reference-fk="PostVote_Member_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_Posts_Users&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;Post&quot;"
+	 dst-table="public.&quot;Member&quot;" reference-fk="Post_Member_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_Comments_Users&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;Comment&quot;"
+	 dst-table="public.&quot;Member&quot;" reference-fk="Comment_Member_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_TrustLevelCommuntiy_Community&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;TrustLevelCommunity&quot;"
+	 dst-table="public.&quot;Community&quot;" reference-fk="TrustLevelCommunity_Community_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_TrustLevelCommuntiy_TrustLevel&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;TrustLevelCommunity&quot;"
+	 dst-table="public.&quot;TrustLevel&quot;" reference-fk="TrustLevelCommunity_TrustLevel_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_MemberCommunity_TrustLevelCommuntiy&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;MemberCommunity&quot;"
+	 dst-table="public.&quot;TrustLevelCommunity&quot;" reference-fk="MemberCommunity_TrustLevelCommunity_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_Template_cp_Community&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;MemberCommunityPrivilege&quot;"
+	 dst-table="public.&quot;Community&quot;" reference-fk="MemberCommunityPrivilege_Community_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_Template_cp_Member&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;MemberCommunityPrivilege&quot;"
+	 dst-table="public.&quot;Member&quot;" reference-fk="MemberCommunityPrivilege_Member_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_Template_cp_Privilege&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;MemberCommunityPrivilege&quot;"
+	 dst-table="public.&quot;Privilege&quot;" reference-fk="MemberCommunityPrivilege_Privlege_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_CommentVote_Comment&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;CommentVote&quot;"
+	 dst-table="public.&quot;Comment&quot;" reference-fk="CommentVote_Comment_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_CommentVote_Member&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;CommentVote&quot;"
+	 dst-table="public.&quot;Member&quot;" reference-fk="CommentVote_Member_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_CommentVote_VoteTypes&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;CommentVote&quot;"
+	 dst-table="public.&quot;VoteType&quot;" reference-fk="CommentVote_VoteType_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_Post_PostType&quot;" type="relfk" layer="0"
+	 src-table="public.&quot;Post&quot;"
+	 dst-table="public.&quot;PostType&quot;" reference-fk="Post_PostType_fk"
+	 src-required="false" dst-required="false"/>
+
+</dbmodel>
