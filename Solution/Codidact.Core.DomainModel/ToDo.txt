@@ -21,6 +21,10 @@ Table Comments for: CommentsVotes, Tags, PostsTags
 
 I have chosen BigInt with the type of IDENTITY instead of BigSerial for primary keys.  I assume we are on postgresql >= 10.0?
 
+I don't know how to do text(xx) columns in pgModeler.  All text are just 'text' for this reason
+
+How important are relationship names (not fk names) in the diagram?
+
 
 Schema Proposal Round 2
 
@@ -45,15 +49,24 @@ Users<del>Sites</del>Communities references but doesn't have a UsersID
 
 Schema Proposal Round 3
 
-Communities table - change from 'IsBeta bool' to 'Status enum'.  Is there a StatusType table?  Where does te enum come from?
+Communities table - change from 'IsBeta bool' to 'Status enum'.  Is there a StatusType table?  Where does the enum come from?
 
 TrustLevelCommunity table has no comment
 TrustLevelCommunity table has no TrustLevel FK (I added one)
+TrustLevel table - gave table comment (in Round 3) to TrustLevelCommunity table
 
 MemberCommunityPrivilege relations - FKs to Member, Community: why not FK to MemberCommunity?
 
 Tag table - SynonymTagID - does this assume only one synonym for each tag, not a possible bunch or have i understood tags incorrectly
 
-TrustLevel table - gave table comment to TrustLevelCommunity table
+Deleted tables: UsersSuspensions
 
-I seem to have a 'template_pk_cp' primary key identifier somewhere I have to search & replace
+--I seem to have a 'template_pk_cp' primary key identifier somewhere I have to search & replace - 
+--found it in TrustLevelCommunity
+
+
+Schema Proposal Round 4
+
+member_community table: is email really unique?  Won't the member (possibly) have the same email in multiple communities?
+
+social_media table: made name unique and added website column
