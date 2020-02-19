@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.2" last-position="0,883" last-zoom="1" max-obj-count="70"
+<dbmodel pgmodeler-ver="0.9.2" last-position="0,0" last-zoom="1" max-obj-count="62"
 	 default-schema="public" default-owner="postgres">
 <database name="new_database" is-template="false" allow-conns="true">
 </database>
@@ -15,7 +15,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<comment><![CDATA[This table will hold the global member records for a Codidact Instance. A member should only have one email to login with, that would be stored here. Does not include details such as password storage and hashing.]]></comment>
-	<position x="500" y="660"/>
+	<position x="480" y="380"/>
 	<column name="id" alias="Member ID - Primary key" not-null="true"
 	 identity-type="ALWAYS">
 		<type name="bigint" length="0"/>
@@ -80,7 +80,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="Template" layer="0" collapse-mode="2" faded-out="true" max-obj-count="6">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="460" y="1980"/>
+	<position x="40" y="2360"/>
 	<column name="id" alias="&lt;TABLE&gt; ID - Primary key" not-null="true"
 	 identity-type="ALWAYS">
 		<type name="bigint" length="0"/>
@@ -99,59 +99,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<constraint name="&lt;Table&gt;_pk" type="pk-constr" alias="&lt;Table&gt; ID - primary key" table="public.&quot;Template&quot;">
 		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-</table>
-
-<table name="community" layer="0" collapse-mode="2" max-obj-count="13">
-	<schema name="public"/>
-	<role name="postgres"/>
-	<comment><![CDATA[Table for each of the individual communities inside of a Codidact installation]]></comment>
-	<position x="40" y="680"/>
-	<column name="id" alias="Community ID - Primary key" not-null="true"
-	 identity-type="ALWAYS">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="created_at" alias="Community creation date/time" not-null="true" default-value="NOW()">
-		<type name="timestamp" length="0"/>
-	</column>
-	<column name="last_modified_at" alias="Community last modified date/time" not-null="true" default-value="NOW()">
-		<type name="timestamp" length="0"/>
-	</column>
-	<column name="created_by_member" alias="Community created by Member link" not-null="true">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="last_modified_by_member" alias="Community last modified by Member link" not-null="true">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="name" alias="Community name text" not-null="true">
-		<type name="text" length="0"/>
-	</column>
-	<column name="tagline" alias="Community tagline text" not-null="true">
-		<type name="text" length="0"/>
-	</column>
-	<column name="url" alias="Community URL text" not-null="true">
-		<type name="text" length="0"/>
-	</column>
-	<column name="help_text" alias="Community Help text">
-		<type name="text" length="0"/>
-	</column>
-	<column name="faq" alias="Community frequently asked questions text">
-		<type name="text" length="0"/>
-	</column>
-	<column name="status" alias="Community site status" not-null="true">
-		<type name="bigint" length="0"/>
-	</column>
-	<constraint name="community_pk" type="pk-constr" alias="Community primary key" table="public.community">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-	<constraint name="community_name_uq" type="uq-constr" alias="Community - Name unique column" table="public.community">
-		<columns names="name" ref-type="src-columns"/>
-	</constraint>
-	<constraint name="community_tagline_uq" type="uq-constr" alias="Community - Tagline unique column" table="public.community">
-		<columns names="tagline" ref-type="src-columns"/>
-	</constraint>
-	<constraint name="community_url_uq" type="uq-constr" alias="Community - URL unique column" table="public.community">
-		<columns names="url" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -176,7 +123,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="last_modified_by_member" alias="TrustLevel last modified by Member link" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
-	<column name="name" alias="TrustLevel name text" not-null="true">
+	<column name="display_name" alias="TrustLevel display name text" not-null="true">
 		<type name="text" length="0"/>
 	</column>
 	<column name="explanation" alias="TrustLevel explanation text" not-null="true">
@@ -186,91 +133,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 	<constraint name="trust_level_name_uq" type="uq-constr" alias="TrustLevel - Name unique column" table="public.trust_level">
-		<columns names="name" ref-type="src-columns"/>
+		<columns names="display_name" ref-type="src-columns"/>
 	</constraint>
 	<constraint name="trust_level_explanation_uq" type="uq-constr" alias="TrustLevel - Explanation unique column" table="public.trust_level">
 		<columns names="explanation" ref-type="src-columns"/>
-	</constraint>
-</table>
-
-<table name="member_community" layer="0" alias="Member &lt;-&gt; Community join table" collapse-mode="2" max-obj-count="26">
-	<schema name="public"/>
-	<role name="postgres"/>
-	<comment><![CDATA[A user may want to join one community and not another, and having a join table between users and communities allows a user to be suspended or gain/lose privileges on a single site. I listed the privilege booleans in the order of lowest to highest, the privileges after IsModerator aren’t listed because we probably are going to take any of moderator’s lower privileges away without demodding them.]]></comment>
-	<position x="0" y="20"/>
-	<column name="id" alias="MemberCommunity ID - Primary key" not-null="true"
-	 identity-type="ALWAYS">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="created_at" alias="MemberCommunity creation date/time" not-null="true" default-value="NOW()">
-		<type name="timestamp" length="0"/>
-	</column>
-	<column name="last_modified_at" alias="MemberCommunity last modified date/time" not-null="true" default-value="NOW()">
-		<type name="timestamp" length="0"/>
-	</column>
-	<column name="created_by_member" alias="MemberCommunity created by Member link" not-null="true">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="last_modified_by_member" alias="MemberCommunity last modified by Member link" not-null="true">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="community_id" alias="MemberCommunity &lt;-&gt; Community link" not-null="true">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="member_id" alias="MemberCommunity &lt;-&gt; Member link" not-null="true">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="display_name" alias="MemberCommunity display name text" not-null="true">
-		<type name="text" length="0"/>
-	</column>
-	<column name="bio" alias="MemberCommunity biography text">
-		<type name="text" length="0"/>
-	</column>
-	<column name="email" alias="MemberCommunity member email address text">
-		<type name="text" length="0"/>
-	</column>
-	<column name="gravatar_hash" alias="MemberCommunity gravatar hash text">
-		<type name="text" length="0"/>
-		<comment><![CDATA[Is this not null?]]></comment>
-	</column>
-	<column name="location" alias="MemberCommunity member location text">
-		<type name="text" length="0"/>
-	</column>
-	<column name="is_from_stack_exchange" alias="MemberCommunity from Stack Exchange status" not-null="true" default-value="FALSE">
-		<type name="bool" length="0"/>
-	</column>
-	<column name="stack_exchange_id" alias="MemberCommunity Stack Exchange account number">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="is_same_as_instance" alias="MemberCommunity same as instance status" default-value="NULL">
-		<type name="bool" length="0"/>
-	</column>
-	<column name="stack_exchange_validated_at" alias="MemberCommunity Stack Exchange account validation date/time">
-		<type name="timestamp" length="0"/>
-	</column>
-	<column name="stack_exchange_last_imported_at" alias="MemberCommunity Stack Exchange latest data import date/time">
-		<type name="timestamp" length="0"/>
-	</column>
-	<column name="is_suspended" alias="MemberCommunity suspension status" not-null="true" default-value="FALSE">
-		<type name="bool" length="0"/>
-	</column>
-	<column name="suspension_end_at" alias="MemberCommunity suspension end date/time">
-		<type name="timestamp" length="0"/>
-	</column>
-	<column name="trust_level_community_id" alias="MemberCommunity &lt;-&gt; TrustLevelCommunity link" not-null="true">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="is_moderator" alias="MemberCommunity moderator status" not-null="true" default-value="FALSE">
-		<type name="bool" length="0"/>
-	</column>
-	<column name="is_deleted" alias="MemberCommunity deleted status" not-null="true" default-value="FALSE">
-		<type name="bool" length="0"/>
-	</column>
-	<constraint name="member_community_pk" type="pk-constr" alias="MemberCommunity primary key" table="public.member_community">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-	<constraint name="member_community_member_community_uq" type="uq-constr" alias="MemberCommunity - Member, Community unique column combination" table="public.member_community">
-		<columns names="member_id,community_id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -278,7 +144,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<comment><![CDATA[I thought about splitting into a Answers table and and QuestionsTable but doing it in the same table lets comments have a PostsId instead of a QuestionsId and a AnswersId. Meta posts are denoted by the IsMeta column. Type of post is determined by the PostTypeId]]></comment>
-	<position x="460" y="1100"/>
+	<position x="80" y="740"/>
 	<column name="id" alias="Post ID - Primary key" not-null="true"
 	 identity-type="ALWAYS">
 		<type name="bigint" length="0"/>
@@ -292,13 +158,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="created_by_member_id" alias="Post &lt;-&gt; created by Member link" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
-	<column name="last_modified_by_member" alias="Post &lt;-&gt; last modified by Member link" not-null="true">
+	<column name="last_modified_by_member_id" alias="Post &lt;-&gt; last modified by Member link" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="member_id" alias="Post &lt;-&gt; Member link" not-null="true">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="community_id" alias="Post &lt;-&gt; Community link" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="title" alias="Post title text" not-null="true">
@@ -318,6 +181,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="score" alias="Post score tally" not-null="true">
 		<type name="decimal" length="0"/>
+	</column>
+	<column name="views" alias="Post views count" not-null="true" default-value="0">
+		<type name="bigint" length="0"/>
 	</column>
 	<column name="post_type_id" alias="Post &lt;-&gt; PostType link" not-null="true">
 		<type name="bigint" length="0"/>
@@ -343,16 +209,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="post_pk" type="pk-constr" alias="Post primary key" table="public.post">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
-	<constraint name="post_community_title_uc" type="uq-constr" alias="Post - Community, Title unique column combination" table="public.post">
-		<columns names="community_id,title" ref-type="src-columns"/>
-	</constraint>
 </table>
 
 <table name="comment" layer="0" collapse-mode="2" max-obj-count="18">
 	<schema name="public"/>
 	<role name="postgres"/>
 	<comment><![CDATA[Table for the comments on posts, both questions and answers.]]></comment>
-	<position x="920" y="1500"/>
+	<position x="940" y="1560"/>
 	<column name="id" alias="Comment ID - Primary key" not-null="true"
 	 identity-type="ALWAYS">
 		<type name="bigint" length="0"/>
@@ -408,7 +271,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<comment><![CDATA[Table for the vote types, upvote/downvote.]]></comment>
-	<position x="940" y="940"/>
+	<position x="1060" y="960"/>
 	<column name="id" alias="VoteType ID - Primary key" not-null="true"
 	 identity-type="ALWAYS">
 		<type name="bigint" length="0"/>
@@ -425,22 +288,22 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="last_modifeid_by_member_id" alias="VoteType &lt;-&gt; last modified by Member link" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
-	<column name="name" alias="VoteType name text" not-null="true">
+	<column name="display_name" alias="VoteType display name text" not-null="true">
 		<type name="text" length="0"/>
 	</column>
 	<constraint name="vote_type_pk" type="pk-constr" alias="VoteType primary key" table="public.vote_type">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 	<constraint name="vote_type_name_uc" type="uq-constr" alias="VoteType - Name unique column" table="public.vote_type">
-		<columns names="name" ref-type="src-columns"/>
+		<columns names="display_name" ref-type="src-columns"/>
 	</constraint>
 </table>
 
-<table name="tag" layer="0" collapse-mode="2" max-obj-count="14">
+<table name="tag" layer="0" collapse-mode="2" max-obj-count="13">
 	<schema name="public"/>
 	<role name="postgres"/>
 	<comment><![CDATA[Table for all of the tags]]></comment>
-	<position x="20" y="1040"/>
+	<position x="60" y="60"/>
 	<column name="id" alias="Tag ID - Primary key" not-null="true"
 	 identity-type="ALWAYS">
 		<type name="bigint" length="0"/>
@@ -457,10 +320,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="last_modified_by_member_id" alias="Tag &lt;-&gt; last modified by Member link" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
-	<column name="community_id" alias="Tag &lt;-&gt; Community link" not-null="true">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="name" alias="Tag name text" not-null="true">
+	<column name="body" alias="Tag body text" not-null="true">
 		<type name="text" length="0"/>
 	</column>
 	<column name="description" alias="Tag description text">
@@ -481,15 +341,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="tag_pk" type="pk-constr" alias="Tag primary key" table="public.tag">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
-	<constraint name="tag_community_name_uc" type="uq-constr" alias="Tag - Community, Name unique column combination" table="public.tag">
-		<columns names="community_id,name" ref-type="src-columns"/>
-	</constraint>
 </table>
 
 <table name="post_tag" layer="0" alias="Post &lt;-&gt; Tag join table" collapse-mode="2" max-obj-count="8">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="40" y="1400"/>
+	<position x="40" y="440"/>
 	<column name="id" alias="PostTag ID - Primary key" not-null="true"
 	 identity-type="ALWAYS">
 		<type name="bigint" length="0"/>
@@ -524,7 +381,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<comment><![CDATA[The reason for this table is so that votes by spammers/serial voters can be undone.]]></comment>
-	<position x="980" y="620"/>
+	<position x="940" y="640"/>
 	<column name="id" alias="PostVote ID - Primary key" not-null="true"
 	 identity-type="ALWAYS">
 		<type name="bigint" length="0"/>
@@ -558,53 +415,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="trust_level_community" layer="0" alias="TrustLevel &lt;-&gt; Community join table" collapse-mode="2" max-obj-count="12">
-	<schema name="public"/>
-	<role name="postgres"/>
-	<comment><![CDATA[This needs to be specific to a community/site for when we get different language sites and it needs to be localised.]]></comment>
-	<position x="480" y="280"/>
-	<column name="id" alias="TrustLevelCommunity ID - Primary key" not-null="true"
-	 identity-type="ALWAYS">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="created_at" alias="TrustLevelCommunity creation date/time" not-null="true" default-value="NOW()">
-		<type name="timestamp" length="0"/>
-	</column>
-	<column name="last_modified_at" alias="TrustLevelCommunity last modified date/time" not-null="true" default-value="NOW()">
-		<type name="timestamp" length="0"/>
-	</column>
-	<column name="created_by_member" alias="TrustLevelCommunity created by Member link" not-null="true">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="last_modified_by_member" alias="TrustLevelCommunity last modified by Member link" not-null="true">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="community_id" alias="TrustLevelCommunity &lt;-&gt; Community link" not-null="true">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="is_same_as_instance" alias="TrustLevelCommunity same as instance status" not-null="true" default-value="TRUE">
-		<type name="bool" length="0"/>
-	</column>
-	<column name="name" alias="TrustLevelCommunity name text">
-		<type name="text" length="0"/>
-	</column>
-	<column name="explanation" alias="TrustLevelCommunity explanation text">
-		<type name="text" length="0"/>
-	</column>
-	<column name="trust_level_id" alias="TrustLevelCommunity &lt;-&gt; TrustLevel link" not-null="true">
-		<type name="bigint" length="0"/>
-	</column>
-	<constraint name="trust_level_community_pk" type="pk-constr" alias="TrustLevelCommunity primary key" table="public.trust_level_community">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-	<constraint name="trust_level_community_explanation_uc" type="uq-constr" alias="TrustLevelCommunity - Explanation unique column" table="public.trust_level_community">
-		<columns names="explanation" ref-type="src-columns"/>
-	</constraint>
-	<constraint name="trust_level_community_name_uc" type="uq-constr" alias="TrustLevelCommunity - Name unique column" table="public.trust_level_community">
-		<columns names="name" ref-type="src-columns"/>
-	</constraint>
-</table>
-
 <table name="privilege" layer="0" collapse-mode="2" max-obj-count="8">
 	<schema name="public"/>
 	<role name="postgres"/>
@@ -626,7 +436,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="last_modified_by_member" alias="Privilege &lt;-&gt; last modified by Member link" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
-	<column name="name" alias="Privilege name text" not-null="true">
+	<column name="display_name" alias="Privilege name text" not-null="true">
 		<type name="text" length="0"/>
 	</column>
 	<column name="description" alias="Privilege description text">
@@ -635,12 +445,15 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="privilege_pk" type="pk-constr" alias="Privilege primary key" table="public.privilege">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
+	<constraint name="privilege_display_name_uc" type="uq-constr" alias="Privilege - DisplayName unique column" table="public.privilege">
+		<columns names="display_name" ref-type="src-columns"/>
+	</constraint>
 </table>
 
-<table name="member_community_privilege" layer="0" alias="MemberCommunity &lt;-&gt; Privlege join table" collapse-mode="2" max-obj-count="13">
+<table name="member_privilege" layer="0" alias="Member &lt;-&gt; Privlege join table" collapse-mode="2" max-obj-count="12">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="980" y="260"/>
+	<position x="920" y="320"/>
 	<column name="id" alias="MemberCommunityPrivilege ID - Primary key" not-null="true"
 	 identity-type="ALWAYS">
 		<type name="bigint" length="0"/>
@@ -655,9 +468,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="last_modified_by_member" alias="MemberCommunityPrivilege &lt;-&gt; last modified by Member link" not-null="true">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="community_id" alias="MemberCommunityPrivilege &lt;-&gt; Community link">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="member_id" alias="MemberCommunityPrivilege &lt;-&gt; Member link" not-null="true">
@@ -675,19 +485,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="privilege_suspension_end_at" alias="MemberCommunityPrivilege suspension end date/time">
 		<type name="timestamp" length="0"/>
 	</column>
-	<constraint name="member_community_privilege_pk" type="pk-constr" alias="MemberCommunityPrivilege primary key" table="public.member_community_privilege">
+	<constraint name="member_privilege_pk" type="pk-constr" alias="MemberPrivilege primary key" table="public.member_privilege">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
-	<constraint name="member_community_privilege_uc" type="uq-constr" alias="Member, Community, Privilege unique column combination" table="public.member_community_privilege">
-		<columns names="member_id,community_id,privilege_id" ref-type="src-columns"/>
-		<comment><![CDATA[Name, alias don't follow normal naming conventions due to 63 char limit.]]></comment>
+	<constraint name="member_privilege_member_privilege_uc" type="uq-constr" alias="MemberPrivilege - Member, Privilege unique column combination" table="public.member_privilege">
+		<columns names="member_id,privilege_id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
 <table name="post_type" layer="0" collapse-mode="2" max-obj-count="8">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="40" y="1700"/>
+	<position x="80" y="1640"/>
 	<column name="id" alias="PostType ID - Primary key" not-null="true"
 	 identity-type="ALWAYS">
 		<type name="bigint" length="0"/>
@@ -704,7 +513,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="last_modified_by_member" alias="PostType &lt;-&gt; last modified by Member link" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
-	<column name="name" alias="PostType name text" not-null="true">
+	<column name="display_name" alias="PostType name text" not-null="true">
 		<type name="text" length="0"/>
 	</column>
 	<column name="description" alias="PostType description text">
@@ -714,14 +523,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 	<constraint name="post_type_name_uc" type="uq-constr" alias="PostType - Name unique column" table="public.post_type">
-		<columns names="name" ref-type="src-columns"/>
+		<columns names="display_name" ref-type="src-columns"/>
 	</constraint>
 </table>
 
 <table name="comment_vote" layer="0" alias="Comment &lt;-&gt; Vote join table" collapse-mode="2" max-obj-count="9">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="900" y="1180"/>
+	<position x="960" y="1200"/>
 	<column name="id" alias="CommentVote ID - Primary key" not-null="true"
 	 identity-type="ALWAYS">
 		<type name="bigint" length="0"/>
@@ -755,10 +564,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="table_list" layer="0" sql-disabled="true" collapse-mode="2" max-obj-count="21">
+<table name="table_list" layer="0" sql-disabled="true" collapse-mode="2" max-obj-count="20">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="60" y="1960"/>
+	<position x="140" y="1920"/>
 	<column name="TABLE_LIST" not-null="true"
 	 identity-type="ALWAYS">
 		<type name="bigint" length="0"/>
@@ -766,22 +575,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="member">
 		<type name="smallint" length="0"/>
 	</column>
-	<column name="community">
-		<type name="smallint" length="0"/>
-	</column>
 	<column name="trust_level">
-		<type name="smallint" length="0"/>
-	</column>
-	<column name="trust_level_community">
-		<type name="smallint" length="0"/>
-	</column>
-	<column name="member_community">
 		<type name="smallint" length="0"/>
 	</column>
 	<column name="privilege">
 		<type name="smallint" length="0"/>
 	</column>
-	<column name="member_community_privilege">
+	<column name="member_privilege">
 		<type name="smallint" length="0"/>
 	</column>
 	<column name="post_type">
@@ -814,6 +614,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="member_social_media">
 		<type name="smallint" length="0"/>
 	</column>
+	<column name="post_status_type">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="post_status">
+		<type name="smallint" length="0"/>
+	</column>
 	<constraint name="TABLE_LIST_PK" type="pk-constr" table="public.table_list">
 		<columns names="TABLE_LIST" ref-type="src-columns"/>
 	</constraint>
@@ -823,7 +629,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<comment><![CDATA[The types of social media that the member can display in their profile]]></comment>
-	<position x="480" y="1680"/>
+	<position x="600" y="960"/>
 	<column name="id" alias="SocialMedia ID - Primary key" not-null="true"
 	 identity-type="ALWAYS">
 		<type name="bigint" length="0"/>
@@ -840,25 +646,25 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="last_modified_by_member" alias="SocialMedia last modified by Member link" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
-	<column name="name" alias="SocialMedia name text" not-null="true">
+	<column name="display_name" alias="SocialMedia name text" not-null="true">
 		<type name="text" length="0"/>
 	</column>
-	<column name="website" alias="SocialMedia website text" not-null="true">
+	<column name="account_url" alias="SocialMedia website text" not-null="true">
 		<type name="text" length="0"/>
 	</column>
 	<constraint name="social_media_pk" type="pk-constr" alias="SocialMedia ID - primary key" table="public.social_media">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 	<constraint name="social_media_name_uc" type="uq-constr" alias="SocialMedia - Name unique column" table="public.social_media">
-		<columns names="name" ref-type="src-columns"/>
+		<columns names="display_name" ref-type="src-columns"/>
 	</constraint>
 </table>
 
-<table name="member_social_media" layer="0" alias="Member &lt;-&gt; SocialMedia join table" collapse-mode="2" max-obj-count="10">
+<table name="member_social_media" layer="0" alias="Member &lt;-&gt; SocialMedia join table" collapse-mode="2" max-obj-count="9">
 	<schema name="public"/>
 	<role name="postgres"/>
 	<comment><![CDATA[The social media that the member would like to display in their community specific profile]]></comment>
-	<position x="860" y="1980"/>
+	<position x="480" y="1280"/>
 	<column name="id" alias="MemberSocialMedia ID - Primary key" not-null="true"
 	 identity-type="ALWAYS">
 		<type name="bigint" length="0"/>
@@ -869,10 +675,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="last_modified_at" alias="MemberSocialMedia last modified date/time" not-null="true" default-value="NOW()">
 		<type name="timestamp" length="0"/>
 	</column>
-	<column name="created_by_member" alias="MemberSocialMedia created by Member link" not-null="true">
+	<column name="created_by_member_id" alias="MemberSocialMedia created by Member link" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
-	<column name="last_modified_by_member" alias="MemberSocialMedia last modified by Member link" not-null="true">
+	<column name="last_modified_by_member_id" alias="MemberSocialMedia last modified by Member link" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="social_media_id" alias="MemberSocialMedia &lt;-&gt; SocialMedia link" not-null="true">
@@ -881,20 +687,83 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="member_id" alias="MemberSocialMedia &lt;-&gt; Member link" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
-	<column name="community_id" alias="MemberSocialMedia &lt;-&gt; Community link">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="url" alias="MemberSocialMedia URL text">
+	<column name="content" alias="MemberSocialMedia content text">
 		<type name="text" length="0"/>
 	</column>
 	<constraint name="member_social_media_pk" type="pk-constr" alias="MemberSocialMedia ID - primary key" table="public.member_social_media">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
-	<constraint name="member_social_media_url_uc" type="uq-constr" alias="MemberSocialMedia - URL unique column" table="public.member_social_media">
-		<columns names="url" ref-type="src-columns"/>
+	<constraint name="member_social_media_social_media_member_uc" type="uq-constr" alias="SocialMedia, Member unique column combination" table="public.member_social_media">
+		<columns names="member_id,social_media_id" ref-type="src-columns"/>
 	</constraint>
-	<constraint name="member_social_media_community_member_social_media_uc" type="uq-constr" alias="Community, Member, Social Media uniqe column combination" table="public.member_social_media">
-		<columns names="community_id,member_id,social_media_id" ref-type="src-columns"/>
+</table>
+
+<table name="post_status_type" layer="0" alias="PostStatus" collapse-mode="2" max-obj-count="8">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[For setting the status of a post locked/featured etc]]></comment>
+	<position x="520" y="1620"/>
+	<column name="id" alias="PostStatus ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="created_at" alias="PostStatus created date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="last_modified_at" alias="PostStatus last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="created_by_member" alias="PostStatus created by Member link" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="last_modified_by_member" alias="PostStatus last modified by Member link" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="display_name" alias="PostStatus display name text" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description" alias="PostStatus description text">
+		<type name="smallint" length="0"/>
+	</column>
+	<constraint name="post_status_type_pk" type="pk-constr" alias="PostStatus ID - primary key" table="public.post_status_type">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="post_status_display_name_uc" type="uq-constr" alias="PostStatus - DisplayName unique column" table="public.post_status_type">
+		<columns names="display_name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="post_status" layer="0" alias="Post &lt;-&gt; PostStatusType join table" collapse-mode="2" max-obj-count="8">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="60" y="1280"/>
+	<column name="id" alias="PostStatus ID - Primary key" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="created_at" alias="PostStatus created date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="last_modified_at" alias="PostStatus last modified date/time" not-null="true" default-value="NOW()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="created_by_member" alias="PostStatus created by Member link" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="last_modified_by_member" alias="PostStatus last modified by Member link" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="post_id" alias="PostStatus &lt;-&gt; Post link" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="post_status_type_id" alias="PostStatus &lt;-&gt; PostStatusType link" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="post_status_pk" type="pk-constr" alias="PostStatus ID - primary key" table="public.post_status">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="post_status_post_status_type_post_uc" type="uq-constr" alias="PostStatus - Post, PostStatusType unique column combination" table="public.post_status">
+		<columns names="post_id,post_status_type_id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -904,20 +773,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
-<constraint name="&lt;Table&gt;_last_modified_by_member_fk" type="fk-constr" alias="&lt;Table&gt; &lt;-&gt; last modified by Member fk" comparison-type="MATCH FULL"
+<constraint name="&lt;Table&gt;_last_modified_by_member_fk" type="fk-constr" alias="&lt;Table&gt; &lt;-&gt; last modified by Member foreign key" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.member" table="public.&quot;Template&quot;">
-	<columns names="last_modified_by_member" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
-<constraint name="community_created_by_member_fk" type="fk-constr" alias="Community &lt;-&gt; created by Member foreign key" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.member" table="public.community">
-	<columns names="created_by_member" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
-<constraint name="community_last_modified_by_member_fk" type="fk-constr" alias="Community &lt;-&gt; last modified by Member foreign key" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.member" table="public.community">
 	<columns names="last_modified_by_member" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
@@ -934,24 +791,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
-<constraint name="member_community_community_fk" type="fk-constr" alias="MemberCommunity &lt;-&gt; Community foreign key" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.community" table="public.member_community">
-	<columns names="community_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
-<constraint name="member_community_member_fk" type="fk-constr" alias="MemberCommunity &lt;-&gt; Member foreign key" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.member" table="public.member_community">
-	<columns names="member_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
-<constraint name="member_c0ommunity_trust_level_community_fk" type="fk-constr" alias="MemberCommunity &lt;-&gt; TrustLevelCommunity foreign key" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.trust_level_community" table="public.member_community">
-	<columns names="trust_level_community_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
 <constraint name="post_created_by_member_fk" type="fk-constr" alias="Post &lt;-&gt; created by Member foreign key" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.member" table="public.post">
 	<columns names="created_by_member_id" ref-type="src-columns"/>
@@ -960,13 +799,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <constraint name="post_last_modified_by_member_fk" type="fk-constr" alias="Post &lt;-&gt; last modified by Member foreign key" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.member" table="public.post">
-	<columns names="last_modified_by_member" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
-<constraint name="post_community_fk" type="fk-constr" alias="Post &lt;-&gt; Community foreign key" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.community" table="public.post">
-	<columns names="community_id" ref-type="src-columns"/>
+	<columns names="last_modified_by_member_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
@@ -990,7 +823,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <constraint name="comment_created_by_member_fk" type="fk-constr" alias="Comment &lt;-&gt; created by Member foreign key" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.member" table="public.comment">
-	<columns names="created_at" ref-type="src-columns"/>
+	<columns names="created_by_member_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
@@ -1030,12 +863,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
-<constraint name="tag_community_fk" type="fk-constr" alias="Tag &lt;-&gt; Community foreign key" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.community" table="public.tag">
-	<columns names="community_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
 <constraint name="tag_created_by_member_fk" type="fk-constr" alias="Tag &lt;-&gt; created by Member foreign key" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.member" table="public.tag">
 	<columns names="created_by_member_id" ref-type="src-columns"/>
@@ -1044,7 +871,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <constraint name="tag_last_modified_by_member_fk" type="fk-constr" alias="Tag &lt;-&gt; last modified by Member foreign key" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.member" table="public.tag">
-	<columns names="last_modified_at" ref-type="src-columns"/>
+	<columns names="last_modified_by_member_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
@@ -1102,30 +929,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
-<constraint name="trust_level_community_created_by_member_fk" type="fk-constr" alias="TrustLevelCommunity &lt;-&gt; created by Member foreign key" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.member" table="public.trust_level_community">
-	<columns names="created_by_member" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
-<constraint name="trust_level_community_last_modifed_by_member_fk" type="fk-constr" alias="TrustLevelCommunity &lt;-&gt; last modifed by Member foreign key" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.member" table="public.trust_level_community">
-	<columns names="last_modified_by_member" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
-<constraint name="trust_level_community_community_fk" type="fk-constr" alias="TrustLevelCommunity &lt;-&gt; Community foreign key" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.community" table="public.trust_level_community">
-	<columns names="community_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
-<constraint name="trust_level_community_trust_level_fk" type="fk-constr" alias="TrustLevelCommunity &lt;-&gt; TrustLevel foreign key" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.trust_level" table="public.trust_level_community">
-	<columns names="trust_level_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
 <constraint name="privilege_created_by_member_fk" type="fk-constr" alias="Privilege &lt;-&gt; created by Member foreign key" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.member" table="public.privilege">
 	<columns names="created_by_member" ref-type="src-columns"/>
@@ -1138,32 +941,26 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
-<constraint name="member_community_privilege_created_by_member_fk" type="fk-constr" alias="MemberCommunityPrivilege &lt;-&gt; created by Member foreign key" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.member" table="public.member_community_privilege">
+<constraint name="member_privilege_created_by_member_fk" type="fk-constr" alias="MemberPrivilege &lt;-&gt; created by Member foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.member" table="public.member_privilege">
 	<columns names="created_by_member" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
-<constraint name="member_community_privilege_last_modified_by_member_fk" type="fk-constr" alias="MemberCommunityPrivilege &lt;-&gt; last modified by Member fk" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.member" table="public.member_community_privilege">
+<constraint name="member_privilege_last_modified_by_member_fk" type="fk-constr" alias="MemberPrivilege &lt;-&gt; last modified by Member foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.member" table="public.member_privilege">
 	<columns names="last_modified_by_member" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
-<constraint name="member_community_privilege_member_fk" type="fk-constr" alias="MemberCommunityPrivilege  &lt;-&gt; Member foreign key" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.member" table="public.member_community_privilege">
+<constraint name="member_privilege_member_fk" type="fk-constr" alias="MemberPrivilege  &lt;-&gt; Member foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.member" table="public.member_privilege">
 	<columns names="member_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
-<constraint name="member_community_privilege_community_fk" type="fk-constr" alias="MemberCommunityPrivilege &lt;-&gt; Community foreign key" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.community" table="public.member_community_privilege">
-	<columns names="community_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
-<constraint name="member_community_privilege_privlege_fk" type="fk-constr" alias="MemberCommunityPrivilege &lt;-&gt; Privilege foreign key" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.privilege" table="public.member_community_privilege">
+<constraint name="member_privilege_privlege_fk" type="fk-constr" alias="MemberPrivilege &lt;-&gt; Privilege foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.privilege" table="public.member_privilege">
 	<columns names="privilege_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
@@ -1182,7 +979,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <constraint name="comment_vote_created_by_member_fk" type="fk-constr" alias="CommentVote &lt;-&gt; created by Member foreign key" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.member" table="public.comment_vote">
-	<columns names="created_at" ref-type="src-columns"/>
+	<columns names="created_by_member_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
@@ -1224,13 +1021,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <constraint name="member_social_media_created_by_member_fk" type="fk-constr" alias="MemberSocialMedia &lt;-&gt; created by Member foreign key" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.member" table="public.member_social_media">
-	<columns names="created_by_member" ref-type="src-columns"/>
+	<columns names="created_by_member_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
-<constraint name="member_social_media_last_modified_by_member_fk" type="fk-constr" alias="MemberSocialMedia &lt;-&gt; last modified by Member fk" comparison-type="MATCH FULL"
+<constraint name="member_social_media_last_modified_by_member_fk" type="fk-constr" alias="MemberSocialMedia &lt;-&gt; last modified by Member foreign key" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.member" table="public.member_social_media">
-	<columns names="last_modified_by_member" ref-type="src-columns"/>
+	<columns names="last_modified_by_member_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
@@ -1246,48 +1043,55 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
-<constraint name="member_social_media_community_fk" type="fk-constr" alias="MemberSocialMedia &lt;-&gt; Community foreign key" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.community" table="public.member_social_media">
-	<columns names="community_id" ref-type="src-columns"/>
+<constraint name="post_status_created_by_member_fk" type="fk-constr" alias="PostStatus &lt;-&gt; created by Member foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.member" table="public.post_status_type">
+	<columns names="created_by_member" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
-<relationship name="rel_UsersSites_Sites" type="relfk" layer="0"
-	 src-table="public.member_community"
-	 dst-table="public.community" reference-fk="member_community_community_fk"
-	 src-required="false" dst-required="false">
-	<label ref-type="name-label">
-		<position x="9.36056" y="4.28229"/>
-	</label>
-</relationship>
+<constraint name="post_status_last_modified_by_member_fk" type="fk-constr" alias="PostStatus &lt;-&gt; last modified by Member foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.member" table="public.post_status_type">
+	<columns names="last_modified_by_member" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
 
-<relationship name="rel_UsersSites_Users" type="relfk" layer="0"
-	 src-table="public.member_community"
-	 dst-table="public.member" reference-fk="member_community_member_fk"
-	 src-required="false" dst-required="false">
-	<label ref-type="name-label">
-		<position x="-5.48101" y="-7.58263"/>
-	</label>
-</relationship>
+<constraint name="post_status_created_by_member_fk" type="fk-constr" alias="PostStatus &lt;-&gt; created by Member foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.member" table="public.post_status">
+	<columns names="created_by_member" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="post_status_last_modified_by_member_fk" type="fk-constr" alias="PostStatus &lt;-&gt; last modified by Member foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.member" table="public.post_status">
+	<columns names="last_modified_by_member" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="post_status_post_id_fk" type="fk-constr" alias="PostStatus &lt;-&gt; Post foreign key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.post" table="public.post_status">
+	<columns names="post_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="post_status_post_status_type_fk" type="fk-constr" alias="PostStatus &lt;-&gt; PostStatusType foregn key" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.post_status_type" table="public.post_status">
+	<columns names="post_status_type_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
 
 <relationship name="rel_Posts_Posts" type="relfk" layer="0"
 	 src-table="public.post"
 	 dst-table="public.post" reference-fk="post_parent_post_fk"
 	 src-required="false" dst-required="false">
 	<line>
-		<position x="839.055" y="1270.29"/>
-	<position x="839.055" y="1077"/>
-	<position x="697.37" y="1077"/>
+		<position x="458.399" y="899.22"/>
+	<position x="458.399" y="717"/>
+	<position x="316.933" y="717"/>
 	</line>
 	<label ref-type="name-label">
 		<position x="4.85628" y="-4.15"/>
 	</label>
 </relationship>
-
-<relationship name="&quot;rel_Posts_Sites&quot;" type="relfk" layer="0"
-	 src-table="public.post"
-	 dst-table="public.community" reference-fk="post_community_fk"
-	 src-required="false" dst-required="false"/>
 
 <relationship name="&quot;rel_Comments_Posts&quot;" type="relfk" layer="0"
 	 src-table="public.comment"
@@ -1299,16 +1103,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.comment" reference-fk="comment_parent_comment_fk"
 	 src-required="false" dst-required="false">
 	<line>
-		<position x="1329.48" y="1631.55"/>
-	<position x="1329.48" y="1477"/>
-	<position x="1177.65" y="1477"/>
+		<position x="1349.48" y="1691.55"/>
+	<position x="1349.48" y="1537"/>
+	<position x="1197.65" y="1537"/>
 	</line>
 </relationship>
-
-<relationship name="&quot;rel_Tags_Sites&quot;" type="relfk" layer="0"
-	 src-table="public.tag"
-	 dst-table="public.community" reference-fk="tag_community_fk"
-	 src-required="false" dst-required="false"/>
 
 <relationship name="&quot;rel_PostsTags_Posts&quot;" type="relfk" layer="0"
 	 src-table="public.post_tag"
@@ -1332,47 +1131,27 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <relationship name="&quot;rel_PostsVotes_Users&quot;" type="relfk" layer="0"
 	 src-table="public.post_vote"
-	 dst-table="public.member" reference-fk="post_vote_member_fk"
+	 dst-table="public.member" reference-fk="post_vote_created_by_member_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="&quot;rel_Posts_Users&quot;" type="relfk" layer="0"
 	 src-table="public.post"
-	 dst-table="public.member" reference-fk="post_member_fk"
+	 dst-table="public.member" reference-fk="post_created_by_member_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="&quot;rel_Comments_Users&quot;" type="relfk" layer="0"
 	 src-table="public.comment"
-	 dst-table="public.member" reference-fk="comment_member_fk"
-	 src-required="false" dst-required="false"/>
-
-<relationship name="&quot;rel_TrustLevelCommuntiy_Community&quot;" type="relfk" layer="0"
-	 src-table="public.trust_level_community"
-	 dst-table="public.community" reference-fk="trust_level_community_community_fk"
-	 src-required="false" dst-required="false"/>
-
-<relationship name="&quot;rel_TrustLevelCommuntiy_TrustLevel&quot;" type="relfk" layer="0"
-	 src-table="public.trust_level_community"
-	 dst-table="public.trust_level" reference-fk="trust_level_community_trust_level_fk"
-	 src-required="false" dst-required="false"/>
-
-<relationship name="&quot;rel_MemberCommunity_TrustLevelCommuntiy&quot;" type="relfk" layer="0"
-	 src-table="public.member_community"
-	 dst-table="public.trust_level_community" reference-fk="member_c0ommunity_trust_level_community_fk"
-	 src-required="false" dst-required="false"/>
-
-<relationship name="&quot;rel_Template_cp_Community&quot;" type="relfk" layer="0"
-	 src-table="public.member_community_privilege"
-	 dst-table="public.community" reference-fk="member_community_privilege_community_fk"
+	 dst-table="public.member" reference-fk="comment_created_by_member_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="&quot;rel_Template_cp_Member&quot;" type="relfk" layer="0"
-	 src-table="public.member_community_privilege"
-	 dst-table="public.member" reference-fk="member_community_privilege_member_fk"
+	 src-table="public.member_privilege"
+	 dst-table="public.member" reference-fk="member_privilege_created_by_member_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="&quot;rel_Template_cp_Privilege&quot;" type="relfk" layer="0"
-	 src-table="public.member_community_privilege"
-	 dst-table="public.privilege" reference-fk="member_community_privilege_privlege_fk"
+	 src-table="public.member_privilege"
+	 dst-table="public.privilege" reference-fk="member_privilege_privlege_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="&quot;rel_CommentVote_Comment&quot;" type="relfk" layer="0"
@@ -1382,7 +1161,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <relationship name="&quot;rel_CommentVote_Member&quot;" type="relfk" layer="0"
 	 src-table="public.comment_vote"
-	 dst-table="public.member" reference-fk="comment_vote_member_fk"
+	 dst-table="public.member" reference-fk="comment_vote_created_by_member_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="&quot;rel_CommentVote_VoteTypes&quot;" type="relfk" layer="0"
@@ -1405,16 +1184,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.member" reference-fk="&lt;Table&gt;_last_modified_by_member_fk"
 	 src-required="false" dst-required="false"/>
 
-<relationship name="rel_community_member" type="relfk" layer="0"
-	 src-table="public.community"
-	 dst-table="public.member" reference-fk="community_created_by_member_fk"
-	 src-required="false" dst-required="false"/>
-
-<relationship name="rel_community_member1" type="relfk" layer="0"
-	 src-table="public.community"
-	 dst-table="public.member" reference-fk="community_last_modified_by_member_fk"
-	 src-required="false" dst-required="false"/>
-
 <relationship name="&quot;rel_TrustLevel_member&quot;" type="relfk" layer="0"
 	 src-table="public.trust_level"
 	 dst-table="public.member" reference-fk="created_by_member_fk"
@@ -1423,16 +1192,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="&quot;rel_TrustLevel_member1&quot;" type="relfk" layer="0"
 	 src-table="public.trust_level"
 	 dst-table="public.member" reference-fk="last_modified_by_member_fk"
-	 src-required="false" dst-required="false"/>
-
-<relationship name="rel_trust_level_community_member" type="relfk" layer="0"
-	 src-table="public.trust_level_community"
-	 dst-table="public.member" reference-fk="trust_level_community_created_by_member_fk"
-	 src-required="false" dst-required="false"/>
-
-<relationship name="rel_trust_level_community_member1" type="relfk" layer="0"
-	 src-table="public.trust_level_community"
-	 dst-table="public.member" reference-fk="trust_level_community_last_modifed_by_member_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="&quot;rel_Template_cp_member&quot;" type="relfk" layer="0"
@@ -1465,11 +1224,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.member" reference-fk="member_social_media_member_fk"
 	 src-required="false" dst-required="false"/>
 
-<relationship name="rel_member_social_media_community" type="relfk" layer="0"
-	 src-table="public.member_social_media"
-	 dst-table="public.community" reference-fk="member_social_media_community_fk"
-	 src-required="false" dst-required="false"/>
-
 <relationship name="&quot;rel_Privilege_member&quot;" type="relfk" layer="0"
 	 src-table="public.privilege"
 	 dst-table="public.member" reference-fk="privilege_created_by_member_fk"
@@ -1481,13 +1235,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_member_community_privilege_member" type="relfk" layer="0"
-	 src-table="public.member_community_privilege"
-	 dst-table="public.member" reference-fk="member_community_privilege_created_by_member_fk"
+	 src-table="public.member_privilege"
+	 dst-table="public.member" reference-fk="member_privilege_last_modified_by_member_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_member_community_privilege_member1" type="relfk" layer="0"
-	 src-table="public.member_community_privilege"
-	 dst-table="public.member" reference-fk="member_community_privilege_last_modified_by_member_fk"
+	 src-table="public.member_privilege"
+	 dst-table="public.member" reference-fk="member_privilege_member_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_post_type_member" type="relfk" layer="0"
@@ -1502,32 +1256,32 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <relationship name="rel_post_member" type="relfk" layer="0"
 	 src-table="public.post"
-	 dst-table="public.member" reference-fk="post_created_by_member_fk"
+	 dst-table="public.member" reference-fk="post_last_modified_by_member_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_post_member1" type="relfk" layer="0"
 	 src-table="public.post"
-	 dst-table="public.member" reference-fk="post_last_modified_by_member_fk"
+	 dst-table="public.member" reference-fk="post_member_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_comment_member" type="relfk" layer="0"
 	 src-table="public.comment"
-	 dst-table="public.member" reference-fk="comment_created_by_member_fk"
+	 dst-table="public.member" reference-fk="comment_last_modified_by_member_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_comment_member1" type="relfk" layer="0"
 	 src-table="public.comment"
-	 dst-table="public.member" reference-fk="comment_last_modified_by_member_fk"
+	 dst-table="public.member" reference-fk="comment_member_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="&quot;rel_CommentVote_member&quot;" type="relfk" layer="0"
 	 src-table="public.comment_vote"
-	 dst-table="public.member" reference-fk="comment_vote_created_by_member_fk"
+	 dst-table="public.member" reference-fk="comment_vote_last_modified_by_member_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="&quot;rel_CommentVote_member1&quot;" type="relfk" layer="0"
 	 src-table="public.comment_vote"
-	 dst-table="public.member" reference-fk="comment_vote_last_modified_by_member_fk"
+	 dst-table="public.member" reference-fk="comment_vote_member_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_tag_member" type="relfk" layer="0"
@@ -1562,12 +1316,42 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <relationship name="rel_post_vote_member" type="relfk" layer="0"
 	 src-table="public.post_vote"
-	 dst-table="public.member" reference-fk="post_vote_created_by_member_fk"
+	 dst-table="public.member" reference-fk="post_vote_last_modified_by_member_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_post_vote_member1" type="relfk" layer="0"
 	 src-table="public.post_vote"
-	 dst-table="public.member" reference-fk="post_vote_last_modified_by_member_fk"
+	 dst-table="public.member" reference-fk="post_vote_member_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_Template_cp_member4&quot;" type="relfk" layer="0"
+	 src-table="public.post_status_type"
+	 dst-table="public.member" reference-fk="post_status_created_by_member_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_Template_cp_member5&quot;" type="relfk" layer="0"
+	 src-table="public.post_status_type"
+	 dst-table="public.member" reference-fk="post_status_last_modified_by_member_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_Template_cp_member6&quot;" type="relfk" layer="0"
+	 src-table="public.post_status"
+	 dst-table="public.member" reference-fk="post_status_created_by_member_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="&quot;rel_Template_cp_member7&quot;" type="relfk" layer="0"
+	 src-table="public.post_status"
+	 dst-table="public.member" reference-fk="post_status_last_modified_by_member_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_post_status_post" type="relfk" layer="0"
+	 src-table="public.post_status"
+	 dst-table="public.post" reference-fk="post_status_post_id_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_post_status_post_status_type" type="relfk" layer="0"
+	 src-table="public.post_status"
+	 dst-table="public.post_status_type" reference-fk="post_status_post_status_type_fk"
 	 src-required="false" dst-required="false"/>
 
 </dbmodel>
