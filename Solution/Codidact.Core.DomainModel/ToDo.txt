@@ -70,3 +70,19 @@ Schema Proposal Round 4
 member_community table: is email really unique?  Won't the member (possibly) have the same email in multiple communities?
 
 social_media table: made name unique and added website column
+
+post_type table: I assume name is UNIQUE?
+
+
+Schema Proposal Round 5
+
+...
+
+Schema Proposal Round 6
+
+Changed name of 'status' table to 'post_status_type'
+
+Do Comments want Views (like Posts).  Supplementary - comment IS A post?
+
+ToDo:  Interesting discussion to look into in replies to Schema Proposal Round 6 thread
+
