@@ -86,3 +86,16 @@ Do Comments want Views (like Posts).  Supplementary - comment IS A post?
 
 ToDo:  Interesting discussion to look into in replies to Schema Proposal Round 6 thread
 
+
+
+Schema Proposal Round 7
+
+category (et al) table - url or uri?
+
+category table - what are calculations do we mean calculation_result (bigint), calculation_status (bool) or soemthing else
+
+category table - is 't' short for 'trust_level'? is there a reason it wasn't written as such?
+
+category table - display_name UNIQUE?
+
+category table - slight change to participation field
