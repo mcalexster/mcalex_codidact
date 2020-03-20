@@ -346,7 +346,7 @@ CREATE TABLE audit.post_status_type_history (
 	history_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
 	history_activity audit.history_activity_type NOT NULL,
 	history_activity_at timestamp NOT NULL DEFAULT NOW(),
-	history_activity_member_id audit.history_activity_type NOT NULL,
+	history_activity_member_id bigint NOT NULL,
 	id bigint NOT NULL,
 	created_at timestamp NOT NULL DEFAULT NOW(),
 	last_modified_at timestamp NOT NULL DEFAULT NOW(),
