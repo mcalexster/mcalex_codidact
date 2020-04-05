@@ -72,7 +72,7 @@ CREATE TABLE audit.vote_type_history (
 	created_at timestamp NOT NULL DEFAULT NOW(),
 	last_modified_at timestamp NOT NULL DEFAULT NOW(),
 	created_by_member_id bigint NOT NULL,
-	last_modifeid_by_member_id bigint NOT NULL,
+	last_modified_by_member_id bigint NOT NULL,
 	universal_code text NOT NULL,
 	display_name text NOT NULL,
 	CONSTRAINT vote_type_history_pk PRIMARY KEY (history_id)
@@ -669,7 +669,7 @@ CREATE TABLE public.vote_type (
 	created_at timestamp NOT NULL DEFAULT NOW(),
 	last_modified_at timestamp NOT NULL DEFAULT NOW(),
 	created_by_member_id bigint NOT NULL,
-	last_modifeid_by_member_id bigint NOT NULL,
+	last_modified_by_member_id bigint NOT NULL,
 	universal_code text NOT NULL,
 	display_name text NOT NULL,
 	is_deleted bool NOT NULL DEFAULT FALSE,
@@ -1696,7 +1696,7 @@ ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- object: vote_type_last_modified_by_member_fk | type: CONSTRAINT --
 -- ALTER TABLE public.vote_type DROP CONSTRAINT IF EXISTS vote_type_last_modified_by_member_fk CASCADE;
-ALTER TABLE public.vote_type ADD CONSTRAINT vote_type_last_modified_by_member_fk FOREIGN KEY (last_modifeid_by_member_id)
+ALTER TABLE public.vote_type ADD CONSTRAINT vote_type_last_modified_by_member_fk FOREIGN KEY (last_modified_by_member_id)
 REFERENCES public.member (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
