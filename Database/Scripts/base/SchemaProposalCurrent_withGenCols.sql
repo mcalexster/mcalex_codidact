@@ -73,6 +73,7 @@ CREATE TABLE audit.vote_type_history (
 	last_modified_at timestamp NOT NULL DEFAULT NOW(),
 	created_by_member_id bigint NOT NULL,
 	last_modifeid_by_member_id bigint NOT NULL,
+	universal_code text NOT NULL,
 	display_name text NOT NULL,
 	CONSTRAINT vote_type_history_pk PRIMARY KEY (history_id)
 
@@ -91,24 +92,27 @@ CREATE TABLE audit.post_history (
 	history_activity_at timestamp NOT NULL DEFAULT NOW(),
 	history_activity_member_id bigint NOT NULL,
 	id bigint NOT NULL,
-	created_at timestamp NOT NULL DEFAULT NOW(),
-	last_modified_at timestamp NOT NULL DEFAULT NOW(),
+	created_at timestamp NOT NULL,
+	last_modified_at timestamp NOT NULL,
 	created_by_member_id bigint NOT NULL,
 	last_modified_by_member_id bigint NOT NULL,
 	author_member_id bigint NOT NULL,
 	title text NOT NULL,
 	body text NOT NULL,
-	upvotes smallint NOT NULL DEFAULT 0,
-	downvotes smallint NOT NULL DEFAULT 0,
+	upvotes smallint NOT NULL,
+	downvotes smallint NOT NULL,
 	net_votes bigint GENERATED ALWAYS AS (upvotes - downvotes) STORED,
 	score decimal NOT NULL,
-	views bigint NOT NULL DEFAULT 0,
+	views bigint NOT NULL,
 	post_type_id bigint NOT NULL,
-	is_accepted bool NOT NULL DEFAULT FALSE,
-	is_closed bool NOT NULL DEFAULT FALSE,
-	is_protected bool NOT NULL DEFAULT FALSE,
+	is_accepted bool NOT NULL,
+	is_closed bool NOT NULL,
+	is_protected bool NOT NULL,
 	parent_post_id bigint,
 	category_id bigint NOT NULL,
+	notice_id bigint,
+	is_locked bool,
+	locked_at timestamp,
 	CONSTRAINT post_history_pk PRIMARY KEY (history_id)
 
 );
@@ -177,6 +181,7 @@ CREATE TABLE audit.privilege_history (
 	last_modifiedat timestamp NOT NULL DEFAULT NOW(),
 	created_by_member_id bigint NOT NULL,
 	last_modified_by_member_id bigint NOT NULL,
+	universal_code text,
 	display_name text NOT NULL,
 	description text,
 	CONSTRAINT privilege_history_pk PRIMARY KEY (history_id)
@@ -228,6 +233,7 @@ CREATE TABLE audit.post_type_history (
 	last_modified_by_member_id bigint NOT NULL,
 	display_name text NOT NULL,
 	description text,
+	universal_code text,
 	CONSTRAINT post_type_history_pk PRIMARY KEY (history_id)
 
 );
@@ -284,6 +290,8 @@ CREATE TABLE audit.comment_vote_history (
 -- 	category_post_type_history smallint,
 -- 	post_duplicate_post_history smallint,
 -- 	category_tag_set_history smallint,
+-- 	member_annotation_history smallint,
+-- 	annotation_history_type smallint,
 -- 	CONSTRAINT "TABLE_LIST_PK" PRIMARY KEY ("TABLE_LIST")
 -- 
 -- );
@@ -396,6 +404,7 @@ CREATE TABLE audit.setting_history (
 	last_modified_at timestamp NOT NULL DEFAULT NOW(),
 	created_by_member_id bigint NOT NULL,
 	last_modified_by_member_id bigint NOT NULL,
+	universal_code text,
 	display_name text,
 	current_value text,
 	is_mod_changeable bool NOT NULL DEFAULT FALSE,
@@ -554,7 +563,10 @@ COMMENT ON COLUMN public.member.network_account_id IS E'link to ''network_accoun
 -- 	last_modified_at timestamp NOT NULL DEFAULT NOW(),
 -- 	created_by_member_id bigint NOT NULL,
 -- 	last_modified_by_member_id bigint NOT NULL,
--- 	CONSTRAINT "<Table>_pk" PRIMARY KEY (id)
+-- 	is_deleted bool NOT NULL DEFAULT FALSE,
+-- 	deleted_at timestamp,
+-- 	deleted_by_member_id bigint,
+-- 	CONSTRAINT "<table>_pk" PRIMARY KEY (id)
 -- 
 -- );
 -- -- ddl-end --
@@ -607,6 +619,9 @@ CREATE TABLE public.post (
 	is_protected bool NOT NULL DEFAULT FALSE,
 	parent_post_id bigint,
 	category_id bigint NOT NULL,
+	notice_id bigint,
+	is_locked bool NOT NULL DEFAULT FALSE,
+	locked_at timestamp,
 	is_deleted bool NOT NULL DEFAULT FALSE,
 	deleted_at timestamp,
 	deleted_by_member_id bigint,
@@ -655,11 +670,13 @@ CREATE TABLE public.vote_type (
 	last_modified_at timestamp NOT NULL DEFAULT NOW(),
 	created_by_member_id bigint NOT NULL,
 	last_modifeid_by_member_id bigint NOT NULL,
+	universal_code text NOT NULL,
 	display_name text NOT NULL,
 	is_deleted bool NOT NULL DEFAULT FALSE,
 	deleted_at timestamp,
 	deleted_by_member_id bigint,
 	CONSTRAINT vote_type_pk PRIMARY KEY (id),
+	CONSTRAINT vote_type_universal_code_uc UNIQUE (universal_code),
 	CONSTRAINT vote_type_display_name_uc UNIQUE (display_name)
 
 );
@@ -753,13 +770,15 @@ CREATE TABLE public.privilege (
 	last_modifiedat timestamp NOT NULL DEFAULT NOW(),
 	created_by_member_id bigint NOT NULL,
 	last_modified_by_member_id bigint NOT NULL,
+	universal_code text NOT NULL,
 	display_name text NOT NULL,
 	description text,
 	is_deleted bool NOT NULL DEFAULT FALSE,
 	deleted_at timestamp,
 	deleted_by_member_id bigint,
 	CONSTRAINT privilege_pk PRIMARY KEY (id),
-	CONSTRAINT privilege_display_name_uc UNIQUE (display_name)
+	CONSTRAINT privilege_display_name_uc UNIQUE (display_name),
+	CONSTRAINT privilege_universal_code_uc UNIQUE (universal_code)
 
 );
 -- ddl-end --
@@ -802,12 +821,14 @@ CREATE TABLE public.post_type (
 	last_modified_at timestamp NOT NULL DEFAULT NOW(),
 	created_by_member_id bigint NOT NULL,
 	last_modified_by_member_id bigint NOT NULL,
+	universal_code text NOT NULL,
 	display_name text NOT NULL,
 	description text,
 	is_deleted bool NOT NULL DEFAULT FALSE,
 	deleted_at timestamp,
 	deleted_by_member_id bigint,
 	CONSTRAINT post_type_pk PRIMARY KEY (id),
+	CONSTRAINT post_type_universal_code_uc UNIQUE (universal_code),
 	CONSTRAINT post_type_name_uc UNIQUE (display_name)
 
 );
@@ -864,6 +885,8 @@ CREATE TABLE public.comment_vote (
 -- 	category_post_type smallint,
 -- 	post_duplicate_post smallint,
 -- 	category_tag_set smallint,
+-- 	member_annotation smallint,
+-- 	annotation_type smallint,
 -- 	CONSTRAINT "TABLE_LIST_PK" PRIMARY KEY ("TABLE_LIST")
 -- 
 -- );
@@ -971,6 +994,7 @@ CREATE TABLE public.setting (
 	last_modified_at timestamp NOT NULL DEFAULT NOW(),
 	created_by_member_id bigint NOT NULL,
 	last_modified_by_member_id bigint NOT NULL,
+	universal_code text NOT NULL,
 	display_name text NOT NULL,
 	current_value text,
 	is_mod_changeable bool NOT NULL DEFAULT FALSE,
@@ -978,6 +1002,7 @@ CREATE TABLE public.setting (
 	deleted_at timestamp,
 	deleted_by_member_id bigint,
 	CONSTRAINT setting_pk PRIMARY KEY (id),
+	CONSTRAINT setting_universal_code_uc UNIQUE (universal_code),
 	CONSTRAINT setting_display_name_uc UNIQUE (display_name)
 
 );
@@ -1151,6 +1176,223 @@ CREATE TABLE audit.category_tag_set_history (
 -- ALTER TABLE audit.category_tag_set_history OWNER TO postgres;
 -- ddl-end --
 
+-- object: public.close_reason | type: TABLE --
+-- DROP TABLE IF EXISTS public.close_reason CASCADE;
+CREATE TABLE public.close_reason (
+	id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
+	created_at timestamp NOT NULL DEFAULT NOW(),
+	last_modified_at timestamp NOT NULL DEFAULT NOW(),
+	created_by_member_id bigint NOT NULL,
+	last_modified_by_member_id bigint NOT NULL,
+	display_name text NOT NULL,
+	description text,
+	parent_close_reason_id bigint,
+	is_active bool NOT NULL DEFAULT TRUE,
+	is_deleted bool NOT NULL DEFAULT FALSE,
+	deleted_at timestamp,
+	deleted_by_member_id bigint,
+	CONSTRAINT close_reason_pk PRIMARY KEY (id)
+
+);
+-- ddl-end --
+-- ALTER TABLE public.close_reason OWNER TO postgres;
+-- ddl-end --
+
+-- object: audit.close_reason_history | type: TABLE --
+-- DROP TABLE IF EXISTS audit.close_reason_history CASCADE;
+CREATE TABLE audit.close_reason_history (
+	history_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
+	history_activity audit.history_activity_type NOT NULL,
+	history_activity_at timestamp NOT NULL DEFAULT NOW(),
+	history_activity_member_id bigint NOT NULL,
+	id bigint,
+	created_at timestamp NOT NULL DEFAULT NOW(),
+	last_modified_at timestamp NOT NULL DEFAULT NOW(),
+	created_by_member_id bigint NOT NULL,
+	last_modified_by_member_id bigint NOT NULL,
+	display_name text NOT NULL,
+	description text,
+	parent_close_reason_id bigint,
+	is_active bool NOT NULL DEFAULT TRUE,
+	CONSTRAINT close_reason_history_pk PRIMARY KEY (history_id)
+
+);
+-- ddl-end --
+-- ALTER TABLE audit.close_reason_history OWNER TO postgres;
+-- ddl-end --
+
+-- object: public.member_annotation | type: TABLE --
+-- DROP TABLE IF EXISTS public.member_annotation CASCADE;
+CREATE TABLE public.member_annotation (
+	id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
+	created_at timestamp NOT NULL DEFAULT NOW(),
+	last_modified_at timestamp NOT NULL DEFAULT NOW(),
+	created_by_member_id bigint NOT NULL,
+	last_modified_by_member_id bigint NOT NULL,
+	is_deleted bool NOT NULL DEFAULT FALSE,
+	deleted_at timestamp,
+	deleted_by_member_id bigint,
+	member_id bigint NOT NULL,
+	annotation_type_id bigint NOT NULL,
+	annotation_description text,
+	CONSTRAINT member_annotation_pk PRIMARY KEY (id)
+
+);
+-- ddl-end --
+-- ALTER TABLE public.member_annotation OWNER TO postgres;
+-- ddl-end --
+
+-- object: public.annotation_type | type: TABLE --
+-- DROP TABLE IF EXISTS public.annotation_type CASCADE;
+CREATE TABLE public.annotation_type (
+	id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
+	created_at timestamp NOT NULL DEFAULT NOW(),
+	last_modified_at timestamp NOT NULL DEFAULT NOW(),
+	created_by_member_id bigint NOT NULL,
+	last_modified_by_member_id bigint NOT NULL,
+	display_name text NOT NULL,
+	description text,
+	is_deleted bool NOT NULL DEFAULT FALSE,
+	deleted_at timestamp,
+	deleted_by_member_id bigint,
+	CONSTRAINT annotation_type_pk PRIMARY KEY (id),
+	CONSTRAINT display_name_uc UNIQUE (display_name)
+
+);
+-- ddl-end --
+-- ALTER TABLE public.annotation_type OWNER TO postgres;
+-- ddl-end --
+
+-- object: audit.member_annotation_history | type: TABLE --
+-- DROP TABLE IF EXISTS audit.member_annotation_history CASCADE;
+CREATE TABLE audit.member_annotation_history (
+	history_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
+	history_activity audit.history_activity_type NOT NULL,
+	history_activity_at timestamp NOT NULL DEFAULT NOW(),
+	history_activity_member_id bigint NOT NULL,
+	id bigint NOT NULL,
+	created_at timestamp NOT NULL DEFAULT NOW(),
+	last_modified_at timestamp NOT NULL DEFAULT NOW(),
+	created_by_member_id bigint NOT NULL,
+	last_modified_by_member_id bigint NOT NULL,
+	member_id bigint NOT NULL,
+	annotation_type_id bigint NOT NULL,
+	annotation_description text,
+	CONSTRAINT member_annotation_history_pk PRIMARY KEY (history_id)
+
+);
+-- ddl-end --
+-- ALTER TABLE audit.member_annotation_history OWNER TO postgres;
+-- ddl-end --
+
+-- object: audit.annotation_type_history | type: TABLE --
+-- DROP TABLE IF EXISTS audit.annotation_type_history CASCADE;
+CREATE TABLE audit.annotation_type_history (
+	history_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
+	history_activity audit.history_activity_type NOT NULL,
+	history_activity_at timestamp NOT NULL DEFAULT NOW(),
+	history_activity_member_id bigint NOT NULL,
+	id bigint,
+	created_at timestamp NOT NULL DEFAULT NOW(),
+	last_modified_at timestamp NOT NULL DEFAULT NOW(),
+	created_by_member_id bigint NOT NULL,
+	last_modified_by_member_id bigint NOT NULL,
+	display_name text NOT NULL,
+	description text,
+	is_deleted bool NOT NULL DEFAULT FALSE,
+	deleted_at timestamp,
+	deleted_by_member_id bigint,
+	CONSTRAINT annotation_type_history_pk PRIMARY KEY (history_id)
+
+);
+-- ddl-end --
+-- ALTER TABLE audit.annotation_type_history OWNER TO postgres;
+-- ddl-end --
+
+-- object: public.close_reason_subreason | type: TABLE --
+-- DROP TABLE IF EXISTS public.close_reason_subreason CASCADE;
+CREATE TABLE public.close_reason_subreason (
+	id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
+	created_at timestamp NOT NULL DEFAULT NOW(),
+	last_modified_at timestamp NOT NULL DEFAULT NOW(),
+	created_by_member_id bigint NOT NULL,
+	last_modified_by_member_id bigint NOT NULL,
+	close_reason_id bigint NOT NULL,
+	subreason_description text NOT NULL,
+	is_deleted bool NOT NULL DEFAULT FALSE,
+	deleted_at timestamp,
+	deleted_by_member_id bigint,
+	CONSTRAINT close_reason_subreason_pk PRIMARY KEY (id)
+
+);
+-- ddl-end --
+-- ALTER TABLE public.close_reason_subreason OWNER TO postgres;
+-- ddl-end --
+
+-- object: audit.close_reason_subreason_history | type: TABLE --
+-- DROP TABLE IF EXISTS audit.close_reason_subreason_history CASCADE;
+CREATE TABLE audit.close_reason_subreason_history (
+	history_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
+	history_activity audit.history_activity_type NOT NULL,
+	history_activity_at timestamp NOT NULL,
+	history_activity_member_id bigint NOT NULL,
+	id bigint,
+	created_at timestamp NOT NULL DEFAULT NOW(),
+	last_modified_at timestamp NOT NULL DEFAULT NOW(),
+	created_by_member_id bigint NOT NULL,
+	last_modified_by_member_id bigint NOT NULL,
+	close_reason_id bigint NOT NULL,
+	subreason_description text NOT NULL,
+	CONSTRAINT close_reason_subreason_history_pk PRIMARY KEY (history_id)
+
+);
+-- ddl-end --
+-- ALTER TABLE audit.close_reason_subreason_history OWNER TO postgres;
+-- ddl-end --
+
+-- object: public.notice | type: TABLE --
+-- DROP TABLE IF EXISTS public.notice CASCADE;
+CREATE TABLE public.notice (
+	id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
+	created_at timestamp NOT NULL DEFAULT NOW(),
+	last_modified_at timestamp NOT NULL DEFAULT NOW(),
+	created_by_member_id bigint NOT NULL,
+	last_modified_by_member_id bigint NOT NULL,
+	display_name text NOT NULL,
+	body text,
+	is_active bool NOT NULL DEFAULT TRUE,
+	is_deleted bool NOT NULL DEFAULT FALSE,
+	deleted_at timestamp,
+	deleted_by_member_id bigint,
+	CONSTRAINT notice_pk PRIMARY KEY (id)
+
+);
+-- ddl-end --
+-- ALTER TABLE public.notice OWNER TO postgres;
+-- ddl-end --
+
+-- object: audit.notice_history | type: TABLE --
+-- DROP TABLE IF EXISTS audit.notice_history CASCADE;
+CREATE TABLE audit.notice_history (
+	history_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
+	history_activity audit.history_activity_type NOT NULL,
+	history_activity_at timestamp NOT NULL DEFAULT NOW(),
+	history_activity_member_id bigint NOT NULL,
+	id bigint NOT NULL,
+	created_at timestamp NOT NULL DEFAULT NOW(),
+	last_modified_at timestamp NOT NULL DEFAULT NOW(),
+	created_by_member_id bigint NOT NULL,
+	last_modified_by_member_id bigint NOT NULL,
+	display_name text,
+	body text,
+	is_active bool,
+	CONSTRAINT notice_history_pk PRIMARY KEY (history_id)
+
+);
+-- ddl-end --
+-- ALTER TABLE audit.notice_history OWNER TO postgres;
+-- ddl-end --
+
 -- object: comment_history_member_fk | type: CONSTRAINT --
 -- ALTER TABLE audit.comment_history DROP CONSTRAINT IF EXISTS comment_history_member_fk CASCADE;
 ALTER TABLE audit.comment_history ADD CONSTRAINT comment_history_member_fk FOREIGN KEY (history_activity_member_id)
@@ -1305,16 +1547,23 @@ REFERENCES public.member (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
--- -- object: "<Table>_created_by_member_fk" | type: CONSTRAINT --
--- -- ALTER TABLE public."Template" DROP CONSTRAINT IF EXISTS "<Table>_created_by_member_fk" CASCADE;
--- ALTER TABLE public."Template" ADD CONSTRAINT "<Table>_created_by_member_fk" FOREIGN KEY (created_by_member_id)
+-- -- object: "<table>_created_by_member_fk" | type: CONSTRAINT --
+-- -- ALTER TABLE public."Template" DROP CONSTRAINT IF EXISTS "<table>_created_by_member_fk" CASCADE;
+-- ALTER TABLE public."Template" ADD CONSTRAINT "<table>_created_by_member_fk" FOREIGN KEY (created_by_member_id)
 -- REFERENCES public.member (id) MATCH FULL
 -- ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- -- ddl-end --
 -- 
--- -- object: "<Table>_last_modified_by_member_fk" | type: CONSTRAINT --
--- -- ALTER TABLE public."Template" DROP CONSTRAINT IF EXISTS "<Table>_last_modified_by_member_fk" CASCADE;
--- ALTER TABLE public."Template" ADD CONSTRAINT "<Table>_last_modified_by_member_fk" FOREIGN KEY (last_modified_by_member_id)
+-- -- object: "<table>_last_modified_by_member_fk" | type: CONSTRAINT --
+-- -- ALTER TABLE public."Template" DROP CONSTRAINT IF EXISTS "<table>_last_modified_by_member_fk" CASCADE;
+-- ALTER TABLE public."Template" ADD CONSTRAINT "<table>_last_modified_by_member_fk" FOREIGN KEY (last_modified_by_member_id)
+-- REFERENCES public.member (id) MATCH FULL
+-- ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- -- ddl-end --
+-- 
+-- -- object: "<table>_deleted_by_member_fk" | type: CONSTRAINT --
+-- -- ALTER TABLE public."Template" DROP CONSTRAINT IF EXISTS "<table>_deleted_by_member_fk" CASCADE;
+-- ALTER TABLE public."Template" ADD CONSTRAINT "<table>_deleted_by_member_fk" FOREIGN KEY (deleted_by_member_id)
 -- REFERENCES public.member (id) MATCH FULL
 -- ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- -- ddl-end --
@@ -1379,6 +1628,13 @@ ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ALTER TABLE public.post DROP CONSTRAINT IF EXISTS post_category_fk CASCADE;
 ALTER TABLE public.post ADD CONSTRAINT post_category_fk FOREIGN KEY (category_id)
 REFERENCES public.category (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: post_notice_fk | type: CONSTRAINT --
+-- ALTER TABLE public.post DROP CONSTRAINT IF EXISTS post_notice_fk CASCADE;
+ALTER TABLE public.post ADD CONSTRAINT post_notice_fk FOREIGN KEY (notice_id)
+REFERENCES public.notice (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
@@ -1952,6 +2208,181 @@ ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- object: tag_set_history_member_fk | type: CONSTRAINT --
 -- ALTER TABLE audit.category_tag_set_history DROP CONSTRAINT IF EXISTS tag_set_history_member_fk CASCADE;
 ALTER TABLE audit.category_tag_set_history ADD CONSTRAINT tag_set_history_member_fk FOREIGN KEY (history_activity_member_id)
+REFERENCES public.member (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: close_reason_created_by_member_fk | type: CONSTRAINT --
+-- ALTER TABLE public.close_reason DROP CONSTRAINT IF EXISTS close_reason_created_by_member_fk CASCADE;
+ALTER TABLE public.close_reason ADD CONSTRAINT close_reason_created_by_member_fk FOREIGN KEY (created_by_member_id)
+REFERENCES public.member (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: close_reason_last_modified_by_member_fk | type: CONSTRAINT --
+-- ALTER TABLE public.close_reason DROP CONSTRAINT IF EXISTS close_reason_last_modified_by_member_fk CASCADE;
+ALTER TABLE public.close_reason ADD CONSTRAINT close_reason_last_modified_by_member_fk FOREIGN KEY (last_modified_by_member_id)
+REFERENCES public.member (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: close_reason_parent_close_reason_fk | type: CONSTRAINT --
+-- ALTER TABLE public.close_reason DROP CONSTRAINT IF EXISTS close_reason_parent_close_reason_fk CASCADE;
+ALTER TABLE public.close_reason ADD CONSTRAINT close_reason_parent_close_reason_fk FOREIGN KEY (parent_close_reason_id)
+REFERENCES public.close_reason (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: close_reason_deleted_by_member_fk | type: CONSTRAINT --
+-- ALTER TABLE public.close_reason DROP CONSTRAINT IF EXISTS close_reason_deleted_by_member_fk CASCADE;
+ALTER TABLE public.close_reason ADD CONSTRAINT close_reason_deleted_by_member_fk FOREIGN KEY (deleted_by_member_id)
+REFERENCES public.member (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: history_activity_member_fk | type: CONSTRAINT --
+-- ALTER TABLE audit.close_reason_history DROP CONSTRAINT IF EXISTS history_activity_member_fk CASCADE;
+ALTER TABLE audit.close_reason_history ADD CONSTRAINT history_activity_member_fk FOREIGN KEY (history_activity_member_id)
+REFERENCES public.member (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: member_annotation_created_by_member_fk | type: CONSTRAINT --
+-- ALTER TABLE public.member_annotation DROP CONSTRAINT IF EXISTS member_annotation_created_by_member_fk CASCADE;
+ALTER TABLE public.member_annotation ADD CONSTRAINT member_annotation_created_by_member_fk FOREIGN KEY (created_by_member_id)
+REFERENCES public.member (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: member_annotation_last_modified_by_member_fk | type: CONSTRAINT --
+-- ALTER TABLE public.member_annotation DROP CONSTRAINT IF EXISTS member_annotation_last_modified_by_member_fk CASCADE;
+ALTER TABLE public.member_annotation ADD CONSTRAINT member_annotation_last_modified_by_member_fk FOREIGN KEY (last_modified_by_member_id)
+REFERENCES public.member (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: member_annotation_deleted_by_member_fk | type: CONSTRAINT --
+-- ALTER TABLE public.member_annotation DROP CONSTRAINT IF EXISTS member_annotation_deleted_by_member_fk CASCADE;
+ALTER TABLE public.member_annotation ADD CONSTRAINT member_annotation_deleted_by_member_fk FOREIGN KEY (deleted_by_member_id)
+REFERENCES public.member (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: member_annotation_member_fk | type: CONSTRAINT --
+-- ALTER TABLE public.member_annotation DROP CONSTRAINT IF EXISTS member_annotation_member_fk CASCADE;
+ALTER TABLE public.member_annotation ADD CONSTRAINT member_annotation_member_fk FOREIGN KEY (member_id)
+REFERENCES public.member (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: member_annotation_annotation_type_fk | type: CONSTRAINT --
+-- ALTER TABLE public.member_annotation DROP CONSTRAINT IF EXISTS member_annotation_annotation_type_fk CASCADE;
+ALTER TABLE public.member_annotation ADD CONSTRAINT member_annotation_annotation_type_fk FOREIGN KEY (annotation_type_id)
+REFERENCES public.annotation_type (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: annotation_type_created_by_member_fk_cp | type: CONSTRAINT --
+-- ALTER TABLE public.annotation_type DROP CONSTRAINT IF EXISTS annotation_type_created_by_member_fk_cp CASCADE;
+ALTER TABLE public.annotation_type ADD CONSTRAINT annotation_type_created_by_member_fk_cp FOREIGN KEY (created_by_member_id)
+REFERENCES public.member (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: annotation_type_last_modified_by_member_fk_cp | type: CONSTRAINT --
+-- ALTER TABLE public.annotation_type DROP CONSTRAINT IF EXISTS annotation_type_last_modified_by_member_fk_cp CASCADE;
+ALTER TABLE public.annotation_type ADD CONSTRAINT annotation_type_last_modified_by_member_fk_cp FOREIGN KEY (last_modified_by_member_id)
+REFERENCES public.member (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: annotation_type_deleted_by_member_fk_cp | type: CONSTRAINT --
+-- ALTER TABLE public.annotation_type DROP CONSTRAINT IF EXISTS annotation_type_deleted_by_member_fk_cp CASCADE;
+ALTER TABLE public.annotation_type ADD CONSTRAINT annotation_type_deleted_by_member_fk_cp FOREIGN KEY (deleted_by_member_id)
+REFERENCES public.member (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: member_annotation_history_member_fk | type: CONSTRAINT --
+-- ALTER TABLE audit.member_annotation_history DROP CONSTRAINT IF EXISTS member_annotation_history_member_fk CASCADE;
+ALTER TABLE audit.member_annotation_history ADD CONSTRAINT member_annotation_history_member_fk FOREIGN KEY (history_activity_member_id)
+REFERENCES public.member (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: annotation_type_history_member_fk | type: CONSTRAINT --
+-- ALTER TABLE audit.annotation_type_history DROP CONSTRAINT IF EXISTS annotation_type_history_member_fk CASCADE;
+ALTER TABLE audit.annotation_type_history ADD CONSTRAINT annotation_type_history_member_fk FOREIGN KEY (history_activity_member_id)
+REFERENCES public.member (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: close_reason_subreason_created_by_member_fk | type: CONSTRAINT --
+-- ALTER TABLE public.close_reason_subreason DROP CONSTRAINT IF EXISTS close_reason_subreason_created_by_member_fk CASCADE;
+ALTER TABLE public.close_reason_subreason ADD CONSTRAINT close_reason_subreason_created_by_member_fk FOREIGN KEY (created_by_member_id)
+REFERENCES public.member (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: close_reason_subreason_last_modified_by_member_fk | type: CONSTRAINT --
+-- ALTER TABLE public.close_reason_subreason DROP CONSTRAINT IF EXISTS close_reason_subreason_last_modified_by_member_fk CASCADE;
+ALTER TABLE public.close_reason_subreason ADD CONSTRAINT close_reason_subreason_last_modified_by_member_fk FOREIGN KEY (last_modified_by_member_id)
+REFERENCES public.member (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: close_reason_subreason_deleted_by_member_fk | type: CONSTRAINT --
+-- ALTER TABLE public.close_reason_subreason DROP CONSTRAINT IF EXISTS close_reason_subreason_deleted_by_member_fk CASCADE;
+ALTER TABLE public.close_reason_subreason ADD CONSTRAINT close_reason_subreason_deleted_by_member_fk FOREIGN KEY (deleted_by_member_id)
+REFERENCES public.member (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: close_reason_subreason_close_reason_fk | type: CONSTRAINT --
+-- ALTER TABLE public.close_reason_subreason DROP CONSTRAINT IF EXISTS close_reason_subreason_close_reason_fk CASCADE;
+ALTER TABLE public.close_reason_subreason ADD CONSTRAINT close_reason_subreason_close_reason_fk FOREIGN KEY (close_reason_id)
+REFERENCES public.close_reason (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: close_reason_subreason_history_member_fk | type: CONSTRAINT --
+-- ALTER TABLE audit.close_reason_subreason_history DROP CONSTRAINT IF EXISTS close_reason_subreason_history_member_fk CASCADE;
+ALTER TABLE audit.close_reason_subreason_history ADD CONSTRAINT close_reason_subreason_history_member_fk FOREIGN KEY (history_activity_member_id)
+REFERENCES public.member (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: notice_created_by_member_fk | type: CONSTRAINT --
+-- ALTER TABLE public.notice DROP CONSTRAINT IF EXISTS notice_created_by_member_fk CASCADE;
+ALTER TABLE public.notice ADD CONSTRAINT notice_created_by_member_fk FOREIGN KEY (created_by_member_id)
+REFERENCES public.member (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: notice_last_modified_by_member_fk | type: CONSTRAINT --
+-- ALTER TABLE public.notice DROP CONSTRAINT IF EXISTS notice_last_modified_by_member_fk CASCADE;
+ALTER TABLE public.notice ADD CONSTRAINT notice_last_modified_by_member_fk FOREIGN KEY (last_modified_by_member_id)
+REFERENCES public.member (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: notice_deleted_by_member_fk | type: CONSTRAINT --
+-- ALTER TABLE public.notice DROP CONSTRAINT IF EXISTS notice_deleted_by_member_fk CASCADE;
+ALTER TABLE public.notice ADD CONSTRAINT notice_deleted_by_member_fk FOREIGN KEY (deleted_by_member_id)
+REFERENCES public.member (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: notice_created_by_member_fk_cp | type: CONSTRAINT --
+-- ALTER TABLE audit.notice_history DROP CONSTRAINT IF EXISTS notice_created_by_member_fk_cp CASCADE;
+ALTER TABLE audit.notice_history ADD CONSTRAINT notice_created_by_member_fk_cp FOREIGN KEY (created_by_member_id)
+REFERENCES public.member (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: notice_last_modified_by_member_fk_cp | type: CONSTRAINT --
+-- ALTER TABLE audit.notice_history DROP CONSTRAINT IF EXISTS notice_last_modified_by_member_fk_cp CASCADE;
+ALTER TABLE audit.notice_history ADD CONSTRAINT notice_last_modified_by_member_fk_cp FOREIGN KEY (last_modified_by_member_id)
 REFERENCES public.member (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
