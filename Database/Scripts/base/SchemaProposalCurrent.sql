@@ -669,7 +669,7 @@ CREATE TABLE public.vote_type (
 	created_at timestamp NOT NULL DEFAULT NOW(),
 	last_modified_at timestamp NOT NULL DEFAULT NOW(),
 	created_by_member_id bigint NOT NULL,
-	last_modifeid_by_member_id bigint NOT NULL,
+	last_modified_by_member_id bigint NOT NULL,
 	universal_code text NOT NULL,
 	display_name text NOT NULL,
 	is_deleted bool NOT NULL DEFAULT FALSE,
